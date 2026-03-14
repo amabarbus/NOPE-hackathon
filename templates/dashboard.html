@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,147 +8,218 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; }
-        .glass-panel {
-            background: rgba(20, 24, 34, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.25rem; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #0B0E14;
         }
-        .text-gradient { background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        .animate-slide-in { animation: slideIn 0.3s ease-out forwards; }
+
+        .glass-panel {
+            background: rgba(20, 24, 34, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-[#0B0E14] text-white min-h-screen relative overflow-hidden flex flex-col">
+
+<body class="text-white min-h-screen relative overflow-hidden flex flex-col">
 
     <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute top-20 left-20 w-96 h-96 bg-[#b794f6] rounded-full blur-[150px] opacity-20 animate-pulse"></div>
-        <div class="absolute top-40 right-40 w-96 h-96 bg-[#6b8cff] rounded-full blur-[150px] opacity-20 animate-pulse" style="animation-delay: 1s"></div>
-        <div class="absolute bottom-20 left-1/3 w-96 h-96 bg-[#ff9bce] rounded-full blur-[150px] opacity-20 animate-pulse" style="animation-delay: 2s"></div>
-        <div class="absolute bottom-40 right-1/4 w-96 h-96 bg-[#94d7f6] rounded-full blur-[150px] opacity-20 animate-pulse" style="animation-delay: 3s"></div>
+        <div class="absolute top-20 left-20 w-96 h-96 bg-[#b794f6] rounded-full blur-[150px] opacity-20 animate-pulse">
+        </div>
+        <div class="absolute top-40 right-40 w-96 h-96 bg-[#6b8cff] rounded-full blur-[150px] opacity-20 animate-pulse">
+        </div>
     </div>
 
     <div class="max-w-7xl mx-auto p-8 h-screen flex flex-col w-full relative z-10">
-        
-        <div class="mb-8 flex justify-between items-center">
+
+        <div class="flex justify-between items-center mb-8 shrink-0">
             <div class="flex items-center gap-4">
-                <div class="p-3 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
+                <div
+                    class="p-3 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
                     <i data-lucide="sparkles" class="text-white w-8 h-8"></i>
                 </div>
                 <div>
                     <h1 class="text-4xl font-bold text-gradient tracking-tight">CyberShield Pro</h1>
-                    <p class="text-[#9ca3c0] mt-1 text-sm font-medium">Enterprise-grade cybersecurity for your business</p>
+                    <p class="text-[#9ca3c0] text-sm font-medium">Cloud Edge Protection Active</p>
                 </div>
             </div>
-            <a href="/" class="px-4 py-2 border border-white/10 rounded-lg text-sm text-[#9ca3c0] hover:text-white hover:bg-white/5 transition z-20">Sign Out</a>
+            <a href="/"
+                class="px-4 py-2 border border-white/10 rounded-lg text-sm text-[#9ca3c0] hover:text-white hover:bg-white/5 transition">Sign
+                Out</a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 shrink-0">
             <div class="lg:col-span-2 glass-panel p-6 flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 bg-green-500/10 rounded-xl"><i data-lucide="shield-check" class="text-green-400 w-6 h-6"></i></div>
+                    <div class="p-3 bg-green-500/10 rounded-xl"><i data-lucide="shield-check"
+                            class="text-green-400 w-6 h-6"></i></div>
                     <div>
-                        <h3 class="text-lg font-semibold mb-0.5">System Status</h3>
-                        <p class="text-[#9ca3c0] text-sm">Real-time cloud protection is active</p>
+                        <h3 class="text-lg font-semibold">System Status</h3>
+                        <p class="text-[#9ca3c0] text-sm">Real-time perimeter monitoring active</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="status-text" class="text-[#b794f6] font-medium text-sm transition-colors duration-300">Active</span>
-                    <div id="status-toggle" onclick="toggleStatus()" class="w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all duration-300">
-                        <div id="status-circle" class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all duration-300"></div>
+                    <span id="status-text" class="text-[#b794f6] font-medium text-sm">Active</span>
+                    <div id="status-toggle" onclick="toggleStatus()"
+                        class="w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all">
+                        <div id="status-circle"
+                            class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all"></div>
                     </div>
                 </div>
             </div>
-
             <div class="glass-panel p-6 flex flex-col justify-between">
-                <div class="flex justify-between items-start mb-4">
+                <div class="flex justify-between items-start">
                     <div>
-                        <h3 class="text-lg font-bold text-white">Enterprise Plan</h3>
-                        <p class="text-[#9ca3c0] text-sm mt-1">yourbusiness.com</p>
+                        <h3 class="font-bold">Enterprise Plan</h3>
+                        <p class="text-[#9ca3c0] text-xs">yourbusiness.com</p>
                     </div>
-                    <i data-lucide="credit-card" class="text-[#6b8cff]"></i>
+                    <i data-lucide="credit-card" class="text-[#6b8cff] w-5 h-5"></i>
                 </div>
-                <a href="/manage" class="block text-center w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white">Manage Plan</a>
+                <a href="/manage"
+                    class="mt-4 block text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-medium transition">Manage
+                    Subscription</a>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="glass-panel p-6 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-[#94d7f6]"></div>
-                <p class="text-[#9ca3c0] text-sm mb-1">Total Assets Scanned</p>
-                <h2 class="text-3xl font-bold">14,204</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 shrink-0">
+            <div class="glass-panel p-5 border-l-4 border-l-[#94d7f6]">
+                <p class="text-[#9ca3c0] text-xs mb-1">Assets Scanned</p>
+                <h2 class="text-2xl font-bold">14,204</h2>
             </div>
-            <div class="glass-panel p-6 relative overflow-hidden shadow-[0_0_15px_rgba(183,148,246,0.1)]">
-                <div class="absolute top-0 left-0 w-1 h-full bg-[#b794f6]"></div>
-                <p class="text-[#9ca3c0] text-sm mb-1">Threats Mitigated</p>
-                <h2 class="text-3xl font-bold text-[#b794f6]">2,142</h2>
+            <div class="glass-panel p-5 border-l-4 border-l-[#b794f6]">
+                <p class="text-[#9ca3c0] text-xs mb-1">Threats Mitigated</p>
+                <h2 class="text-2xl font-bold text-[#b794f6]">2,142</h2>
             </div>
-            <div class="glass-panel p-6 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-1 h-full bg-[#6b8cff]"></div>
-                <p class="text-[#9ca3c0] text-sm mb-1">Attacks Prevented Today</p>
-                <h2 class="text-3xl font-bold text-[#6b8cff]">3</h2>
+            <div class="glass-panel p-5 border-l-4 border-l-[#6b8cff]">
+                <p class="text-[#9ca3c0] text-xs mb-1">Prevented Today</p>
+                <h2 class="text-2xl font-bold text-[#6b8cff]">3</h2>
             </div>
         </div>
 
         <div class="glass-panel p-6 flex-1 flex flex-col min-h-0 relative">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold flex items-center gap-2"><i data-lucide="activity" class="text-[#94d7f6]"></i> Attack Logs</h3>
-                
-                <button onclick="toggleCalendar()" class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group z-20">
-                    <i data-lucide="calendar" class="w-4 h-4 text-[#b794f6]"></i>
-                    <span id="display-date" class="text-sm font-mono">Loading Date...</span>
-                    <i data-lucide="chevron-down" class="w-3 h-3 text-[#9ca3c0] group-hover:text-white transition"></i>
-                </button>
+            <div class="flex justify-between items-center mb-6 shrink-0">
+                <h3 class="text-xl font-semibold flex items-center gap-2"><i data-lucide="activity"
+                        class="text-[#94d7f6] w-5 h-5"></i> Attack Logs</h3>
 
-                <div id="calendar-popup" class="absolute top-20 right-6 w-[320px] glass-panel bg-[#1a1f3a] p-4 shadow-2xl z-50 hidden border border-[#6b8cff]/20">
-                    <div class="flex justify-between items-center mb-4">
-                        <button onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0]"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                        <span id="calendar-title" class="text-[#e8e9f3] font-medium">Month Year</span>
-                        <button onclick="changeMonth(1)" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0]"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
-                        <button onclick="toggleCalendar()" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0] ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <div class="relative">
+                    <button onclick="toggleCalendar()"
+                        class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group">
+                        <i data-lucide="calendar" class="w-4 h-4 text-[#b794f6]"></i>
+                        <span id="display-date" class="text-sm font-mono">Loading Date...</span>
+                        <i data-lucide="chevron-down" class="w-3 h-3 text-[#9ca3c0]"></i>
+                    </button>
+                    <div id="calendar-popup"
+                        class="absolute top-12 right-0 w-[350px] glass-panel bg-[#1a1f3a]/95 p-5 shadow-2xl z-[100] hidden border border-[#6b8cff]/20">
+                        <div class="flex flex-col gap-4">
+                            <div class="flex justify-between items-center gap-2">
+                                <div class="flex items-center bg-white/5 border border-white/10 rounded-xl p-1">
+                                    <button onclick="changeYear(-1)"
+                                        class="p-1 hover:bg-white/10 rounded-lg transition"><i
+                                            data-lucide="chevrons-left" class="w-4 h-4 text-[#b794f6]"></i></button>
+                                    <span id="calendar-year" class="px-2 text-xs font-bold font-mono">2026</span>
+                                    <button onclick="changeYear(1)"
+                                        class="p-1 hover:bg-white/10 rounded-lg transition"><i
+                                            data-lucide="chevrons-right" class="w-4 h-4 text-[#b794f6]"></i></button>
+                                </div>
+
+                                <button onclick="goToToday()"
+                                    class="flex-1 py-2 bg-[#b794f6]/10 border border-[#b794f6]/30 text-[#b794f6] text-xs font-bold rounded-xl hover:bg-[#b794f6] hover:text-white transition">
+                                    Go to Today
+                                </button>
+                            </div>
+
+                            <div
+                                class="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl p-1">
+                                <button onclick="changeMonth(-1)"
+                                    class="p-1.5 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevron-left"
+                                        class="w-4 h-4"></i></button>
+                                <span id="calendar-month-name" class="text-sm font-medium">September</span>
+                                <button onclick="changeMonth(1)"
+                                    class="p-1.5 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevron-right"
+                                        class="w-4 h-4"></i></button>
+                            </div>
+                        </div>
+
+                        <div
+                            class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9ca3c0] mt-4 mb-3 uppercase tracking-wider">
+                            <div>Sun</div>
+                            <div>Mon</div>
+                            <div>Tue</div>
+                            <div>Wed</div>
+                            <div>Thu</div>
+                            <div>Fri</div>
+                            <div>Sat</div>
+                        </div>
+
+                        <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
                     </div>
-                    <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2 text-[#9ca3c0]">
-                        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
-                    </div>
-                    <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
                 </div>
                 <input type="hidden" id="log-date" value="">
             </div>
-            
-            <div class="overflow-y-auto flex-1 pr-2 relative z-20">
-                <ul id="log-list" class="space-y-3"></ul>
+
+            <div class="overflow-y-auto flex-1 pr-2">
+                <ul id="log-list" class="space-y-3 pb-4"></ul>
             </div>
         </div>
     </div>
 
-    <div id="ai-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex justify-end">
-        <div class="w-full max-w-md h-full glass-panel !rounded-none !border-y-0 !border-r-0 flex flex-col shadow-2xl animate-slide-in bg-[#0B0E14]/90">
-            
-            <div class="p-6 border-b border-white/10 flex justify-between items-center bg-gradient-to-r from-transparent to-[#b794f6]/5">
+    <div id="ai-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden flex justify-end">
+        <div
+            class="w-full max-w-md h-full glass-panel !rounded-none border-y-0 border-r-0 flex flex-col animate-slide-in bg-[#0B0E14]/95">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="p-2 bg-[#b794f6]/20 rounded-lg"><i data-lucide="bot" class="text-[#b794f6] w-5 h-5"></i></div>
-                    <div>
-                        <h3 class="font-bold text-lg leading-tight">Gemini Analyst</h3>
-                        <p class="text-xs text-green-400">● Secure Connection</p>
+                    <div class="p-2 bg-[#b794f6]/20 rounded-lg"><i data-lucide="bot" class="text-[#b794f6] w-5 h-5"></i>
                     </div>
+                    <h3 class="font-bold">Gemini Threat Analyst</h3>
                 </div>
-                <button onclick="closeModal()" class="text-[#9ca3c0] hover:text-white bg-white/5 p-2 rounded-lg transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <button onclick="closeModal()" class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="x"
+                        class="w-5 h-5"></i></button>
             </div>
-            
-            <div class="px-6 py-3 bg-black/40 border-b border-white/5 text-xs text-[#9ca3c0] flex items-center gap-2">
-                <i data-lucide="target" class="w-3 h-3 text-[#ff9bce]"></i>
-                <span id="active-log-badge" class="truncate font-mono">Analyzing Target...</span>
-            </div>
-
             <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-box"></div>
-
             <div class="p-6 border-t border-white/10 bg-black/20">
                 <div class="flex gap-2 relative">
-                    <input type="text" id="user-input" class="w-full bg-black/60 border border-white/10 rounded-xl py-3 px-4 pr-12 text-sm text-white focus:outline-none focus:border-[#b794f6] focus:ring-1 focus:ring-[#b794f6] transition" placeholder="Ask what happened...">
-                    <button onclick="sendMessage()" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-lg text-white hover:opacity-90 transition shadow-lg">
-                        <i data-lucide="send" class="w-4 h-4"></i>
+                    <input type="text" id="user-input"
+                        class="w-full bg-black/60 border border-white/10 rounded-xl py-3 px-4 text-sm focus:border-[#b794f6] outline-none"
+                        placeholder="Ask about this attack...">
+                    <button onclick="sendMessage()"
+                        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#b794f6] rounded-lg">
+                        <i data-lucide="send" class="w-4 h-4 text-white"></i>
                     </button>
                 </div>
             </div>
@@ -157,42 +229,27 @@
     <script>
         lucide.createIcons();
         let currentLogContext = "";
-
-        // --- Status Toggle Logic ---
+        let displayDate = new Date();
         let isProtectionActive = true;
 
-        function toggleStatus() {
-            isProtectionActive = !isProtectionActive;
-            const toggleBg = document.getElementById('status-toggle');
-            const toggleCircle = document.getElementById('status-circle');
-            const statusText = document.getElementById('status-text');
+        // --- 1. INITIALIZATION ---
+        // This runs the moment the page loads
+        window.onload = function() {
+            const today = new Date();
+            // Start by selecting today's date automatically
+            selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            generateCalendar(); 
+        };
 
-            if (isProtectionActive) {
-                toggleBg.className = "w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all duration-300";
-                toggleCircle.style.transform = "translateX(0)";
-                toggleCircle.style.right = "0.25rem"; 
-                toggleCircle.style.left = "auto";
-                toggleCircle.classList.replace("bg-gray-300", "bg-white");
-                statusText.innerText = "Active";
-                statusText.className = "text-[#b794f6] font-medium text-sm transition-colors duration-300";
-            } else {
-                toggleBg.className = "w-12 h-6 bg-white/10 border border-white/10 rounded-full relative cursor-pointer transition-all duration-300";
-                toggleCircle.style.transform = "translateX(0)";
-                toggleCircle.style.left = "0.25rem";
-                toggleCircle.style.right = "auto";
-                toggleCircle.classList.replace("bg-white", "bg-gray-400");
-                statusText.innerText = "Inactive";
-                statusText.className = "text-gray-500 font-medium text-sm transition-colors duration-300";
-            }
-        }
-
-        // --- Intelligent Dynamic Calendar ---
-        let displayDate = new Date(); 
-
+        // --- 2. CALENDAR LOGIC ---
         function toggleCalendar() {
             document.getElementById('calendar-popup').classList.toggle('hidden');
-            generateCalendar(); 
-            lucide.createIcons();
+            generateCalendar();
+        }
+
+        function changeYear(offset) {
+            displayDate.setFullYear(displayDate.getFullYear() + offset);
+            generateCalendar();
         }
 
         function changeMonth(offset) {
@@ -200,82 +257,113 @@
             generateCalendar();
         }
 
-        function generateCalendar() {
-            const year = displayDate.getFullYear();
-            const month = displayDate.getMonth(); 
-            
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1).getDay(); 
-            const daysInMonth = new Date(year, month + 1, 0).getDate(); 
-            
-            const calendarDays = document.getElementById('calendar-days');
-            let daysHTML = '';
-            
-            for (let i = 0; i < firstDay; i++) {
-                daysHTML += `<div></div>`;
-            }
-            
-            const selectedDateStr = document.getElementById('log-date').value; 
-            
-            for (let i = 1; i <= daysInMonth; i++) {
-                const currentDateStr = `${year}-${(month+1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
-                const isSelected = (currentDateStr === selectedDateStr);
-                const activeClass = isSelected ? 'bg-[#6b8cff] text-white shadow-lg shadow-[#6b8cff]/40' : 'text-[#e8e9f3] hover:bg-[#6b8cff]/20';
-                
-                daysHTML += `<button onclick="selectDate(${year}, ${month + 1}, ${i})" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm transition-colors ${activeClass}">${i}</button>`;
-            }
-            calendarDays.innerHTML = daysHTML;
+        function goToToday() {
+            const today = new Date();
+            selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+            displayDate = new Date(); 
+            generateCalendar();
         }
 
-        function selectDate(year, month, day) {
-            const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        function generateCalendar() {
+            const year = displayDate.getFullYear();
+            const month = displayDate.getMonth();
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             
-            document.getElementById('log-date').value = formattedDate;
-            document.getElementById('display-date').innerText = `${monthNames[month-1]} ${day}, ${year}`;
+            document.getElementById('calendar-year').innerText = year;
+            document.getElementById('calendar-month-name').innerText = monthNames[month];
             
-            displayDate = new Date(year, month - 1, day);
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevMonthDays = new Date(year, month, 0).getDate(); 
+            
+            const calendarDays = document.getElementById('calendar-days');
+            let html = '';
+
+            for (let i = firstDay - 1; i >= 0; i--) {
+                html += `<div class="w-10 h-10 flex items-center justify-center text-sm text-white/10">${prevMonthDays - i}</div>`;
+            }
+
+            const selectedDateStr = document.getElementById('log-date').value;
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const m = (month + 1).toString().padStart(2, '0');
+                const d = i.toString().padStart(2, '0');
+                const dateStr = `${year}-${m}-${d}`;
+                
+                let btnClass = "w-10 h-10 rounded-xl text-sm transition-all flex items-center justify-center ";
+                
+                if (dateStr === selectedDateStr) {
+                    btnClass += "bg-[#b794f6] text-white shadow-lg font-bold scale-110 z-10";
+                } else if (dateStr === todayStr) {
+                    btnClass += "text-[#b794f6] font-bold border border-[#b794f6]/30 bg-[#b794f6]/5";
+                } else {
+                    btnClass += "text-[#e2e8f0] hover:bg-white/10";
+                }
+
+                html += `<button onclick="selectDate(${year},${month+1},${i})" class="${btnClass}">${i}</button>`;
+            }
+            calendarDays.innerHTML = html;
+        }
+
+        function selectDate(y, m, d) {
+            const names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const formatted = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            
+            document.getElementById('log-date').value = formatted;
+            document.getElementById('display-date').innerText = `${names[m-1]} ${d}, ${y}`;
+            
+            // Close the popup after selecting
             document.getElementById('calendar-popup').classList.add('hidden');
+            
+            // FETCH THE LOGS FROM THE BACKEND
             fetchLogs();
         }
 
-        // Initialize exactly once on load!
-        window.onload = function() {
-            const today = new Date();
-            selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
-        };
-
-        // --- Fetch and AI Logic ---
+        // --- 3. BACKEND COMMUNICATION ---
         async function fetchLogs() {
-            const date = document.getElementById('log-date').value;
+            const dateInput = document.getElementById('log-date');
+            if (!dateInput) return;
+            const date = dateInput.value;
             const logList = document.getElementById('log-list');
             
-            const response = await fetch('/get-logs', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: date })
-            });
-            const data = await response.json();
-            
-            logList.innerHTML = ''; 
-            
-            data.logs.forEach(log => {
-                if(log.includes("safe") || log.includes("0 threats") || log.includes("secure")) {
-                    logList.innerHTML += `
+            try {
+                const response = await fetch('/get-logs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: date })
+                });
+                const data = await response.json();
+                
+                logList.innerHTML = '';
+                
+                // If no logs, show a clean "Secure" message
+                if (!data.logs || data.logs.length === 0 || data.logs[0].includes("Secure")) {
+                    logList.innerHTML = `
                         <li class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-green-400 text-center text-sm font-medium flex items-center justify-center gap-2">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i> ${log}
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> ✅ Perimeter Secure. No threats detected on this date.
                         </li>`;
-                } else {
-                    let badge = '';
-                    if(log.includes('[CRITICAL]')) badge = '<span class="px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-md text-xs font-bold tracking-wide">CRITICAL</span>';
-                    else if(log.includes('[WARNING]')) badge = '<span class="px-2.5 py-1 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-md text-xs font-bold tracking-wide">WARNING</span>';
-                    else badge = '<span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-xs font-bold tracking-wide">INFO</span>';
+                    lucide.createIcons();
+                    return;
+                }
 
+                logList.innerHTML = data.logs.map(log => {
+                    // 1. Determine the badge color based on the log text
+                    let badge = '';
+                    if (log.includes('[CRITICAL]')) {
+                        badge = '<span class="px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-md text-[10px] font-bold tracking-wide">CRITICAL</span>';
+                    } else if (log.includes('[WARNING]')) {
+                        badge = '<span class="px-2.5 py-1 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-md text-[10px] font-bold tracking-wide">WARNING</span>';
+                    } else {
+                        badge = '<span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-[10px] font-bold tracking-wide">INFO</span>';
+                    }
+
+                    // 2. Clean the log text (remove the bracketed tags for the UI)
                     let cleanLog = log.replace('[CRITICAL]', '').replace('[WARNING]', '').replace('[INFO]', '');
 
-                    logList.innerHTML += `
+                    // 3. Return the original card design
+                    return `
                         <li class="bg-black/40 border border-white/5 hover:border-white/10 rounded-xl p-4 transition flex justify-between items-center group cursor-pointer" onclick="openModal('${log.replace(/'/g, "\\'")}')">
                             <div class="flex items-center gap-4 overflow-hidden pointer-events-none">
                                 ${badge}
@@ -285,18 +373,21 @@
                                 <i data-lucide="sparkles" class="w-3 h-3"></i> Analyze AI
                             </button>
                         </li>`;
-                }
-            });
-            lucide.createIcons();
+                }).join('');
+                
+                lucide.createIcons();
+            } catch (e) {
+                logList.innerHTML = `<li class="text-center text-red-400 text-xs py-4">Sync Error: Is the backend server running?</li>`;
+            }
         }
 
+        // --- 4. AI & MODAL LOGIC ---
         function openModal(logText) {
             currentLogContext = logText;
             document.getElementById('ai-modal').classList.remove('hidden');
-            document.getElementById('active-log-badge').innerText = logText.substring(0, 50) + "...";
             document.getElementById('chat-box').innerHTML = `
-                <div class="bg-white/5 border border-white/10 border-l-2 border-l-[#b794f6] rounded-2xl rounded-tl-sm p-4 text-sm w-[85%] text-[#e2e8f0]">
-                    I have loaded the threat data into my context window. What would you like me to clarify about this attack?
+                <div class="bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#e2e8f0]">
+                    I've analyzed this threat log. What would you like to know about it?
                 </div>`;
         }
 
@@ -305,47 +396,78 @@
         }
 
         async function sendMessage() {
-            const inputField = document.getElementById('user-input');
-            const chatBox = document.getElementById('chat-box');
-            const message = inputField.value;
-            
-            if (!message) return;
+    const input = document.getElementById('user-input');
+    const chat = document.getElementById('chat-box');
+    const userMsg = input.value;
+    
+    if (!userMsg) return;
 
-            chatBox.innerHTML += `
-                <div class="bg-gradient-to-r from-[#6b8cff] to-[#b794f6] text-white rounded-2xl rounded-tr-sm p-4 text-sm w-[85%] self-end ml-auto shadow-lg">
-                    ${message}
-                </div>`;
-            inputField.value = ''; 
-            chatBox.scrollTop = chatBox.scrollHeight;
+    // 1. Add User Message to UI
+    chat.innerHTML += `<div class="bg-[#b794f6] text-white p-3 rounded-xl text-xs w-[80%] ml-auto shadow-md">${userMsg}</div>`;
+    input.value = ''; // Clear input
+    chat.scrollTop = chat.scrollHeight;
 
-            const typingId = "typing-" + Date.now();
-            chatBox.innerHTML += `
-                <div id="${typingId}" class="bg-white/5 border border-white/10 rounded-2xl rounded-tl-sm p-4 text-sm w-[20%] text-[#9ca3c0] flex gap-1 items-center">
-                    <div class="w-2 h-2 bg-[#b794f6] rounded-full animate-bounce"></div>
-                    <div class="w-2 h-2 bg-[#b794f6] rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                    <div class="w-2 h-2 bg-[#b794f6] rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                </div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
+    // 2. Add the "AI is thinking" Spinner
+    const thinkingId = "thinking-" + Date.now();
+    chat.innerHTML += `
+        <div id="${thinkingId}" class="flex items-center gap-2 bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#9ca3c0]">
+            <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#b794f6]"></i>
+            <span>Gemini is analyzing the threat...</span>
+        </div>
+    `;
+    lucide.createIcons(); // Refresh icons to show the loader
+    chat.scrollTop = chat.scrollHeight;
 
-            const response = await fetch('/ask-ai', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message, log_context: currentLogContext })
-            });
-            const data = await response.json();
-            
-            document.getElementById(typingId).remove();
-            
-            chatBox.innerHTML += `
-                <div class="bg-white/5 border border-white/10 border-l-2 border-l-[#b794f6] rounded-2xl rounded-tl-sm p-4 text-sm w-[85%] text-[#e2e8f0]">
-                    ${data.response}
-                </div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-        
-        document.getElementById("user-input").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") { event.preventDefault(); sendMessage(); }
+    try {
+        // 3. Call the API
+        const response = await fetch('/ask-ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMsg, log_context: currentLogContext })
         });
+        const data = await response.json();
+
+        // 4. Remove the Spinner
+        const loaderElement = document.getElementById(thinkingId);
+        if (loaderElement) loaderElement.remove();
+
+        // 5. Add AI Response
+        chat.innerHTML += `
+            <div class="bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#e2e8f0]">
+                ${data.response}
+            </div>
+        `;
+    } catch (error) {
+        // Remove spinner even if it fails
+        const loaderElement = document.getElementById(thinkingId);
+        if (loaderElement) loaderElement.remove();
+        
+        chat.innerHTML += `<div class="text-red-400 text-[10px] p-2">Failed to connect to AI analyst.</div>`;
+    }
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+        // --- 5. UI HELPERS ---
+        function toggleStatus() {
+            isProtectionActive = !isProtectionActive;
+            const toggleBg = document.getElementById('status-toggle');
+            const toggleCircle = document.getElementById('status-circle');
+            const statusText = document.getElementById('status-text');
+
+            if (isProtectionActive) {
+                toggleBg.className = "w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all";
+                toggleCircle.style.transform = "translateX(0)";
+                statusText.innerText = "Active";
+            } else {
+                toggleBg.className = "w-12 h-6 bg-white/10 border border-white/10 rounded-full relative cursor-pointer transition-all";
+                toggleCircle.style.transform = "translateX(-24px)";
+                statusText.innerText = "Inactive";
+            }
+        }
+
+        document.getElementById("user-input").addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
     </script>
 </body>
+
 </html>

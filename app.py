@@ -9,7 +9,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # IMPORTANT: Paste your actual Gemini API key here!
-genai.configure(api_key="key")
+genai.configure(api_key="AIzaSyCnVEwTcJUuShYYUyPcp79k70YBJDtSn9Q")
 
 # ==========================================
 # 📊 KAGGLE DATASET LOADER (HISTORICAL DATA)

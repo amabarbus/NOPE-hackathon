@@ -2,26 +2,76 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, a
 import google.generativeai as genai
 import os
 import re
-import html  # <--- ADD THIS LINE
+import html
+import csv
 from datetime import datetime
 
 app = Flask(__name__)
 
-# IMPORTANT: Paste your new Gemini API key here!
-genai.configure(api_key="AIzaSyCnVEwTcJUuShYYUyPcp79k70YBJDtSn9Q")
+# IMPORTANT: Paste your actual Gemini API key here!
+genai.configure(api_key="key")
 
-# Make the database dynamic so it logs today's real attacks!
+# ==========================================
+# 📊 KAGGLE DATASET LOADER (HISTORICAL DATA)
+# ==========================================
+log_database = {}
+
+def load_kaggle_data():
+    try:
+        # csv.QUOTE_NONE forces Python to ignore mismatched quotes in Kaggle data!
+        with open('cybersecurity_attacks.csv', mode='r', encoding='utf-8-sig') as file:
+            csv_reader = csv.DictReader(file, quoting=csv.QUOTE_NONE)
+            
+            loaded_count = 0
+            for row in csv_reader:
+                timestamp = row.get('Timestamp', '')
+                if not timestamp: 
+                    continue
+                
+                # Split '2023-05-30 06:33:58' into Date and Time
+                parts = timestamp.split(' ')
+                date = parts[0]
+                time_val = parts[1] if len(parts) > 1 else "Unknown Time"
+                
+                # Convert the CSV's Severity Level to our UI Badges
+                sev_raw = str(row.get('Severity Level', 'Low')).upper()
+                if "HIGH" in sev_raw or "CRITICAL" in sev_raw:
+                    badge = "[CRITICAL]"
+                elif "MEDIUM" in sev_raw:
+                    badge = "[WARNING]"
+                else:
+                    badge = "[INFO]"
+                
+                ip = row.get('Source IP Address', 'Unknown')
+                attack_type = row.get('Attack Type', 'Cyber Threat')
+                
+                # Trim payload to 45 chars so it doesn't break the UI, and strip stray quotes
+                payload = str(row.get('Payload Data', '')).replace('"', '')[:45] 
+                
+                log_entry = f"{time_val} {badge} - Blocked {attack_type} from {ip}. Payload: '{payload}...'"
+                
+                if date not in log_database:
+                    log_database[date] = []
+                log_database[date].append(log_entry)
+                loaded_count += 1
+                
+        print(f"✅ Kaggle Dataset Loaded! Found {loaded_count} attacks.")
+        print(f"📅 Dates available in database: {list(log_database.keys())}")
+        
+    except Exception as e:
+        print(f"⚠️ Could not load CSV: {e}")
+
+# Load historical data
+load_kaggle_data()
+
+# Make sure today's date exists in the database for the live WAF
 TODAY = datetime.now().strftime("%Y-%m-%d")
-log_database = {
-    TODAY: [
-        f"{datetime.now().strftime('%I:%M %p')} [INFO] - CyberShield Live Firewall initialized and active."
-    ]
-}
+if TODAY not in log_database:
+    log_database[TODAY] = [f"{datetime.now().strftime('%I:%M %p')} [INFO] - CyberShield Edge Firewall initialized and active."]
 
 # ==========================================
 # 🛡️ CYBERSHIELD LIVE FIREWALL (WAF)
 # ==========================================
-# These are the actual signatures used to detect hackers
 THREAT_PATTERNS = {
     "SQL Injection": re.compile(r"(union|select|insert|update|delete|drop|or 1=1|--)", re.IGNORECASE),
     "XSS (Cross-Site Scripting)": re.compile(r"(<script>|javascript:|onerror=|<img src=)", re.IGNORECASE),
@@ -30,33 +80,27 @@ THREAT_PATTERNS = {
 
 @app.before_request
 def live_firewall():
-    # Ignore the dashboard and API routes so we don't block ourselves!
     if request.path in ['/dashboard', '/get-logs', '/ask-ai']:
         return
 
-    # Check everything the user types in the URL or submits in a form
     incoming_data = list(request.args.values()) + list(request.form.values())
     
     for payload in incoming_data:
         for threat_type, pattern in THREAT_PATTERNS.items():
             if pattern.search(payload):
-                # 1. CATCH THE HACKER: Generate a live log
                 time_now = datetime.now().strftime("%I:%M %p")
                 ip = request.remote_addr or "Unknown IP"
                 
-                # Make the payload shorter and ESCAPE it so it doesn't break our HTML!
                 short_payload = (payload[:30] + '...') if len(payload) > 30 else payload
-                safe_payload = html.escape(short_payload) # <--- THIS FIXES THE BUG
+                safe_payload = html.escape(short_payload) 
                 
-                live_log = f"{time_now} [CRITICAL] - Blocked {threat_type} from {ip}. Payload: '{safe_payload}'"
+                live_log = f"{time_now} [CRITICAL] - LIVE BLOCK {threat_type} from {ip}. Payload: '{safe_payload}'"
 
-                # 2. SAVE IT TO THE DASHBOARD
                 if TODAY not in log_database:
                     log_database[TODAY] = []
-                log_database[TODAY].insert(0, live_log) # Put it at the top of the list!
+                log_database[TODAY].insert(0, live_log) 
                 
-                # 3. BLOCK THE ATTACK
-                abort(403, description=f"🛑 CYBERSHIELD BLOCKED THIS REQUEST: Suspected {threat_type} attack detected.")
+                abort(403, description=f"🛑 CYBERSHIELD EDGE BLOCK: Suspected {threat_type} attack detected.")
 
 # ==========================================
 # NORMAL ROUTES
@@ -68,16 +112,23 @@ def home():
 
 @app.route('/subscribe', methods=['POST'])
 def subscribe():
+    client_domain = request.form.get('domain', 'yourbusiness.com')
+    print(f"🚀 Provisioning Cloud Armor routing for: {client_domain}")
     return redirect(url_for('dashboard'))
 
 @app.route('/dashboard')
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/manage')
+def manage():
+    # This looks for the subscription.html file you created
+    return render_template('subscription.html')
+
 @app.route('/get-logs', methods=['POST'])
 def get_logs():
     selected_date = request.json.get('date')
-    logs = log_database.get(selected_date, ["✅ No attacks recorded on this date. Your site was completely safe!"])
+    logs = log_database.get(selected_date, ["✅ No attacks recorded on this date. Cloud perimeter secure."])
     return jsonify({"logs": logs})
 
 @app.route('/ask-ai', methods=['POST'])
@@ -86,9 +137,9 @@ def ask_ai():
     log_context = request.json.get('log_context')
     
     system_prompt = f"""
-    You are CyberShield AI. Analyze this specific server log: "{log_context}"
+    You are CyberShield AI. Analyze this specific Cloud Firewall log: "{log_context}"
     User Question: "{user_question}"
-    Explain what the hackers were trying to do, how the firewall stopped them, and why the user is safe in simple terms.
+    Explain what the hackers were trying to do to the client's site, how the firewall stopped them, and why the user is safe in simple terms.
     """
     
     try:

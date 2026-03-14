@@ -69,7 +69,7 @@
                     </div>
                     <i data-lucide="credit-card" class="text-[#6b8cff]"></i>
                 </div>
-                <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white">Manage Plan</button>
+                <a href="/manage" class="block text-center w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white">Manage Plan</a>
             </div>
         </div>
 
@@ -97,21 +97,23 @@
                 
                 <button onclick="toggleCalendar()" class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group z-20">
                     <i data-lucide="calendar" class="w-4 h-4 text-[#b794f6]"></i>
-                    <span id="display-date" class="text-sm font-mono">March 14, 2026</span>
+                    <span id="display-date" class="text-sm font-mono">Loading Date...</span>
                     <i data-lucide="chevron-down" class="w-3 h-3 text-[#9ca3c0] group-hover:text-white transition"></i>
                 </button>
 
                 <div id="calendar-popup" class="absolute top-20 right-6 w-[320px] glass-panel bg-[#1a1f3a] p-4 shadow-2xl z-50 hidden border border-[#6b8cff]/20">
                     <div class="flex justify-between items-center mb-4">
-                        <span class="text-[#e8e9f3] font-medium">March 2026</span>
-                        <button onclick="toggleCalendar()" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0]"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        <button onclick="changeMonth(-1)" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0]"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <span id="calendar-title" class="text-[#e8e9f3] font-medium">Month Year</span>
+                        <button onclick="changeMonth(1)" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0]"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="toggleCalendar()" class="p-1 rounded-lg hover:bg-[#2d3454] transition text-[#9ca3c0] ml-2"><i data-lucide="x" class="w-4 h-4"></i></button>
                     </div>
                     <div class="grid grid-cols-7 gap-1 text-center text-xs mb-2 text-[#9ca3c0]">
                         <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
                     </div>
                     <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
                 </div>
-                <input type="hidden" id="log-date" value="2026-03-14">
+                <input type="hidden" id="log-date" value="">
             </div>
             
             <div class="overflow-y-auto flex-1 pr-2 relative z-20">
@@ -166,16 +168,14 @@
             const statusText = document.getElementById('status-text');
 
             if (isProtectionActive) {
-                // Switch ON (Purple/Blue Glow)
                 toggleBg.className = "w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all duration-300";
                 toggleCircle.style.transform = "translateX(0)";
-                toggleCircle.style.right = "0.25rem"; // 1px
+                toggleCircle.style.right = "0.25rem"; 
                 toggleCircle.style.left = "auto";
                 toggleCircle.classList.replace("bg-gray-300", "bg-white");
                 statusText.innerText = "Active";
                 statusText.className = "text-[#b794f6] font-medium text-sm transition-colors duration-300";
             } else {
-                // Switch OFF (Gray out)
                 toggleBg.className = "w-12 h-6 bg-white/10 border border-white/10 rounded-full relative cursor-pointer transition-all duration-300";
                 toggleCircle.style.transform = "translateX(0)";
                 toggleCircle.style.left = "0.25rem";
@@ -186,37 +186,68 @@
             }
         }
 
-        window.onload = function() {
-            generateCalendar();
-            fetchLogs();
-        };
+        // --- Intelligent Dynamic Calendar ---
+        let displayDate = new Date(); 
 
         function toggleCalendar() {
             document.getElementById('calendar-popup').classList.toggle('hidden');
+            generateCalendar(); 
             lucide.createIcons();
         }
 
+        function changeMonth(offset) {
+            displayDate.setMonth(displayDate.getMonth() + offset);
+            generateCalendar();
+        }
+
         function generateCalendar() {
+            const year = displayDate.getFullYear();
+            const month = displayDate.getMonth(); 
+            
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('calendar-title').innerText = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1).getDay(); 
+            const daysInMonth = new Date(year, month + 1, 0).getDate(); 
+            
             const calendarDays = document.getElementById('calendar-days');
             let daysHTML = '';
-            for (let i = 0; i < 0; i++) daysHTML += `<div></div>`;
             
-            for (let i = 1; i <= 31; i++) {
-                const isSelected = (i === 14);
-                const activeClass = isSelected ? 'bg-[#6b8cff] text-white' : 'text-[#e8e9f3] hover:bg-[#6b8cff]/10';
-                daysHTML += `<button onclick="selectDate(2026, 3, ${i})" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm transition-colors ${activeClass}">${i}</button>`;
+            for (let i = 0; i < firstDay; i++) {
+                daysHTML += `<div></div>`;
+            }
+            
+            const selectedDateStr = document.getElementById('log-date').value; 
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                const currentDateStr = `${year}-${(month+1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                const isSelected = (currentDateStr === selectedDateStr);
+                const activeClass = isSelected ? 'bg-[#6b8cff] text-white shadow-lg shadow-[#6b8cff]/40' : 'text-[#e8e9f3] hover:bg-[#6b8cff]/20';
+                
+                daysHTML += `<button onclick="selectDate(${year}, ${month + 1}, ${i})" class="w-10 h-10 rounded-lg flex items-center justify-center text-sm transition-colors ${activeClass}">${i}</button>`;
             }
             calendarDays.innerHTML = daysHTML;
         }
 
         function selectDate(year, month, day) {
-            document.getElementById('log-date').value = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            document.getElementById('display-date').innerText = `March ${day}, ${year}`;
-            generateCalendar(); 
-            toggleCalendar();
+            const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            document.getElementById('log-date').value = formattedDate;
+            document.getElementById('display-date').innerText = `${monthNames[month-1]} ${day}, ${year}`;
+            
+            displayDate = new Date(year, month - 1, day);
+            document.getElementById('calendar-popup').classList.add('hidden');
             fetchLogs();
         }
 
+        // Initialize exactly once on load!
+        window.onload = function() {
+            const today = new Date();
+            selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        };
+
+        // --- Fetch and AI Logic ---
         async function fetchLogs() {
             const date = document.getElementById('log-date').value;
             const logList = document.getElementById('log-list');
@@ -231,7 +262,7 @@
             logList.innerHTML = ''; 
             
             data.logs.forEach(log => {
-                if(log.includes("safe") || log.includes("0 threats")) {
+                if(log.includes("safe") || log.includes("0 threats") || log.includes("secure")) {
                     logList.innerHTML += `
                         <li class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-green-400 text-center text-sm font-medium flex items-center justify-center gap-2">
                             <i data-lucide="shield-check" class="w-5 h-5"></i> ${log}

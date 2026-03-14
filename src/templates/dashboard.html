@@ -54,6 +54,9 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
+                    <button onclick="openFirewallModal()" class="mr-4 px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium text-[#9ca3c0] hover:text-white transition flex items-center gap-2">
+                        <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> Firewall Rules
+                    </button>
                     <span id="status-text" class="text-[#b794f6] font-medium text-sm transition-colors duration-300">Active</span>
                     <div id="status-toggle" onclick="toggleStatus()" class="w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all duration-300">
                         <div id="status-circle" class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all duration-300"></div>
@@ -77,24 +80,29 @@
             <div class="glass-panel p-6 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-[#94d7f6]"></div>
                 <p class="text-[#9ca3c0] text-sm mb-1">Total Assets Scanned</p>
-                <h2 class="text-3xl font-bold">14,204</h2>
+                <h2 id="total-assets" class="text-3xl font-bold">14,204</h2>
             </div>
             <div class="glass-panel p-6 relative overflow-hidden shadow-[0_0_15px_rgba(183,148,246,0.1)]">
                 <div class="absolute top-0 left-0 w-1 h-full bg-[#b794f6]"></div>
                 <p class="text-[#9ca3c0] text-sm mb-1">Threats Mitigated</p>
-                <h2 class="text-3xl font-bold text-[#b794f6]">2,142</h2>
+                <h2 id="total-threats" class="text-3xl font-bold text-[#b794f6]">0</h2>
             </div>
             <div class="glass-panel p-6 relative overflow-hidden">
                 <div class="absolute top-0 left-0 w-1 h-full bg-[#6b8cff]"></div>
                 <p class="text-[#9ca3c0] text-sm mb-1">Attacks Prevented Today</p>
-                <h2 class="text-3xl font-bold text-[#6b8cff]">3</h2>
+                <h2 id="today-threats" class="text-3xl font-bold text-[#6b8cff]">0</h2>
             </div>
         </div>
 
         <div class="glass-panel p-6 flex-1 flex flex-col min-h-0 relative">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold flex items-center gap-2"><i data-lucide="activity" class="text-[#94d7f6]"></i> Attack Logs</h3>
+            <div class="flex justify-between items-center mb-6 gap-4">
+                <h3 class="text-xl font-semibold flex items-center gap-2 whitespace-nowrap"><i data-lucide="activity" class="text-[#94d7f6]"></i> Attack Logs</h3>
                 
+                <div class="flex-1 max-w-md relative group">
+                    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3c0] group-focus-within:text-[#b794f6] transition"></i>
+                    <input type="text" id="log-search" oninput="fetchLogs()" placeholder="Search by IP, payload, or threat..." class="w-full bg-black/40 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-[#b794f6] transition">
+                </div>
+
                 <button onclick="toggleCalendar()" class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group z-20">
                     <i data-lucide="calendar" class="w-4 h-4 text-[#b794f6]"></i>
                     <span id="display-date" class="text-sm font-mono">Loading Date...</span>
@@ -154,9 +162,159 @@
         </div>
     </div>
 
+    <div id="firewall-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-2xl glass-panel bg-[#0B0E14]/95 shadow-2xl p-8 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-8 border-b border-white/10 pb-6">
+                <div class="flex items-center gap-4">
+                    <div class="p-3 bg-[#6b8cff]/20 rounded-xl"><i data-lucide="shield-alert" class="text-[#6b8cff] w-6 h-6"></i></div>
+                    <div>
+                        <h2 class="text-2xl font-bold">Firewall Management</h2>
+                        <p class="text-[#9ca3c0] text-sm">Configure custom WAF rules and manual IP blocks</p>
+                    </div>
+                </div>
+                <button onclick="closeFirewallModal()" class="text-[#9ca3c0] hover:text-white bg-white/5 p-2 rounded-lg transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="space-y-8">
+                <!-- IP Blocklist Section -->
+                <section>
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="user-minus" class="text-red-400 w-5 h-5"></i> IP Blocklist</h3>
+                        <p class="text-xs text-[#9ca3c0]">Manually block entire source IPs</p>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="new-ip" class="flex-1 bg-black/60 border border-white/10 rounded-lg py-2 px-4 text-sm focus:outline-none focus:border-[#6b8cff] transition" placeholder="Enter IP address (e.g. 192.168.1.1)">
+                        <button onclick="addIP()" class="px-4 py-2 bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 rounded-lg text-sm transition font-medium text-white flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i> Block IP
+                        </button>
+                    </div>
+                    <div id="ip-list" class="space-y-2 max-h-40 overflow-y-auto pr-2">
+                        <!-- IPs will be rendered here -->
+                    </div>
+                </section>
+
+                <hr class="border-white/5">
+
+                <!-- Custom Rules Section -->
+                <section>
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="font-bold text-lg flex items-center gap-2"><i data-lucide="code" class="text-[#b794f6] w-5 h-5"></i> Custom WAF Rules</h3>
+                        <p class="text-xs text-[#9ca3c0]">Define custom regex patterns to block</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <input type="text" id="rule-name" class="bg-black/60 border border-white/10 rounded-lg py-2 px-4 text-sm focus:outline-none focus:border-[#b794f6] transition" placeholder="Rule Name (e.g. Block Admin Access)">
+                        <input type="text" id="rule-pattern" class="bg-black/60 border border-white/10 rounded-lg py-2 px-4 text-sm font-mono focus:outline-none focus:border-[#b794f6] transition" placeholder="Regex Pattern (e.g. /admin)">
+                    </div>
+                    <button onclick="addRule()" class="w-full py-2 bg-[#b794f6]/10 hover:bg-[#b794f6]/20 border border-[#b794f6]/30 rounded-lg text-sm transition font-bold text-[#b794f6] flex items-center justify-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i> Add Firewall Rule
+                    </button>
+                    <div id="rules-list" class="space-y-2 mt-6 max-h-48 overflow-y-auto pr-2">
+                        <!-- Rules will be rendered here -->
+                    </div>
+                </section>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-white/10 flex justify-end gap-3">
+                <button onclick="closeFirewallModal()" class="px-6 py-2.5 text-sm text-[#9ca3c0] hover:text-white transition">Cancel</button>
+                <button onclick="saveFirewallSettings()" class="px-8 py-2.5 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-xl text-sm font-bold shadow-lg shadow-[#b794f6]/20 hover:opacity-90 transition">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
         let currentLogContext = "";
+        let firewallSettings = { ip_blocklist: [], custom_rules: [] };
+
+        async function openFirewallModal() {
+            const response = await fetch('/get-firewall-settings');
+            firewallSettings = await response.json();
+            renderFirewallSettings();
+            document.getElementById('firewall-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeFirewallModal() {
+            document.getElementById('firewall-modal').classList.add('hidden');
+        }
+
+        function renderFirewallSettings() {
+            const ipList = document.getElementById('ip-list');
+            const rulesList = document.getElementById('rules-list');
+
+            if (firewallSettings.ip_blocklist.length === 0) {
+                ipList.innerHTML = '<p class="text-xs text-[#9ca3c0] italic">No manually blocked IPs.</p>';
+            } else {
+                ipList.innerHTML = firewallSettings.ip_blocklist.map((ip, index) => `
+                    <div class="flex justify-between items-center bg-white/5 border border-white/5 rounded-lg px-4 py-2">
+                        <span class="text-sm font-mono text-[#e8e9f3]">${ip}</span>
+                        <button onclick="removeIP(${index})" class="text-red-400/60 hover:text-red-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>
+                `).join('');
+            }
+
+            if (firewallSettings.custom_rules.length === 0) {
+                rulesList.innerHTML = '<p class="text-xs text-[#9ca3c0] italic">No custom rules defined.</p>';
+            } else {
+                rulesList.innerHTML = firewallSettings.custom_rules.map((rule, index) => `
+                    <div class="bg-white/5 border border-white/5 rounded-lg px-4 py-3">
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-sm font-bold text-[#b794f6]">${rule.name}</span>
+                            <button onclick="removeRule(${index})" class="text-red-400/60 hover:text-red-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>
+                        <code class="text-xs text-[#9ca3c0]">${rule.pattern}</code>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+
+        function addIP() {
+            const input = document.getElementById('new-ip');
+            const ip = input.value.trim();
+            if (ip && !firewallSettings.ip_blocklist.includes(ip)) {
+                firewallSettings.ip_blocklist.push(ip);
+                input.value = '';
+                renderFirewallSettings();
+            }
+        }
+
+        function removeIP(index) {
+            firewallSettings.ip_blocklist.splice(index, 1);
+            renderFirewallSettings();
+        }
+
+        function addRule() {
+            const nameInput = document.getElementById('rule-name');
+            const patternInput = document.getElementById('rule-pattern');
+            const name = nameInput.value.trim();
+            const pattern = patternInput.value.trim();
+            
+            if (name && pattern) {
+                firewallSettings.custom_rules.push({ name, pattern });
+                nameInput.value = '';
+                patternInput.value = '';
+                renderFirewallSettings();
+            }
+        }
+
+        function removeRule(index) {
+            firewallSettings.custom_rules.splice(index, 1);
+            renderFirewallSettings();
+        }
+
+        async function saveFirewallSettings() {
+            const response = await fetch('/update-firewall-settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(firewallSettings)
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                closeFirewallModal();
+                alert('Firewall settings updated successfully!');
+            }
+        }
 
         // --- Status Toggle Logic ---
         let isProtectionActive = true;
@@ -245,22 +403,53 @@
         window.onload = function() {
             const today = new Date();
             selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
+
+            // --- REAL-TIME AUTO-REFRESH ---
+            // Refresh logs every 5 seconds if we are looking at "Today"
+            setInterval(() => {
+                const selectedDate = document.getElementById('log-date').value;
+                const todayStr = new Date().toISOString().split('T')[0];
+                
+                // Only refresh if the user is looking at today and not currently searching
+                const isSearching = document.getElementById('log-search').value.length > 0;
+                const isModalOpen = !document.getElementById('ai-modal').classList.contains('hidden');
+                
+                if (selectedDate === todayStr && !isSearching && !isModalOpen) {
+                    console.log("🔄 Real-time update: Syncing with CyberShield Edge...");
+                    fetchLogs();
+                }
+            }, 5000);
         };
 
-        // --- Fetch and AI Logic ---
         async function fetchLogs() {
             const date = document.getElementById('log-date').value;
+            const searchQuery = document.getElementById('log-search').value;
             const logList = document.getElementById('log-list');
-            
+
             const response = await fetch('/get-logs', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ date: date })
+                body: JSON.stringify({ date: date, search: searchQuery })
             });
             const data = await response.json();
-            
+
+            // Update Stats Counters
+            if (data.total_threats !== undefined) {
+                document.getElementById('total-threats').innerText = data.total_threats.toLocaleString();
+                document.getElementById('today-threats').innerText = data.today_threats.toLocaleString();
+            }
+
             logList.innerHTML = ''; 
             
+            if (!data.logs || data.logs.length === 0) {
+                 logList.innerHTML = `
+                        <li class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-green-400 text-center text-sm font-medium flex items-center justify-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> No attacks recorded on this date. Cloud perimeter secure.
+                        </li>`;
+                 lucide.createIcons();
+                 return;
+            }
+
             data.logs.forEach(log => {
                 if(log.includes("safe") || log.includes("0 threats") || log.includes("secure")) {
                     logList.innerHTML += `

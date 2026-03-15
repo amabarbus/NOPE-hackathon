@@ -113,9 +113,19 @@ THREAT_PATTERNS = {
     "XSS": re.compile(r"(<script>|javascript:|onerror=|<img src=)", re.IGNORECASE)
 }
 
+# 🆕 The Master Switch!
+WAF_ACTIVE = True
+
 @app.before_request
 def live_firewall():
-    if request.path in ['/dashboard', '/manage', '/get-logs', '/ask-ai', '/static', '/subscribe', '/profile']: 
+    global WAF_ACTIVE
+    
+    # 🆕 If the switch is off, let EVERYTHING through!
+    if not WAF_ACTIVE:
+        return
+
+    # Ignore our own API routes so the dashboard doesn't block itself
+    if request.path in ['/dashboard', '/manage', '/get-logs', '/ask-ai', '/static', '/subscribe', '/profile', '/generate-iso-report', '/add-system-log', '/toggle-waf']: 
         return
         
     data = list(request.args.values()) + list(request.form.values())
@@ -126,6 +136,27 @@ def live_firewall():
                 if TODAY not in log_database: log_database[TODAY] = []
                 log_database[TODAY].insert(0, log)
                 abort(403, description=f"🛑 NOPE! EDGE BLOCK: Suspected {threat} attack detected.")
+
+# 🆕 The route that listens to your dashboard button
+@app.route('/toggle-waf', methods=['POST'])
+def toggle_waf():
+    global WAF_ACTIVE
+    data = request.json
+    WAF_ACTIVE = data.get('active', True)
+    
+    # Add a cool log to the dashboard so everyone sees who turned it off
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    time_now = datetime.now().strftime('%I:%M %p')
+    status_text = "ACTIVATED" if WAF_ACTIVE else "DEACTIVATED (WARNING: PERIMETER EXPOSED)"
+    log_color = "[SYSTEM]" if WAF_ACTIVE else "[WARNING]"
+    
+    entry = f"{time_now} {log_color} - ADMIN ACTION: Edge Firewall {status_text}."
+    
+    if today_str not in log_database: 
+        log_database[today_str] = []
+    log_database[today_str].insert(0, entry)
+    
+    return jsonify({"status": "success", "waf_active": WAF_ACTIVE})
 
 # ==========================================
 # 🌐 ROUTES
@@ -166,7 +197,28 @@ def dashboard():
     return render_template('dashboard.html', today_count=real_count)
 
 @app.route('/manage')
-def manage(): return render_template('subscription.html')
+def manage(): 
+    # 1. Count REAL blocked threats across all days in the database
+    total_blocked = 0
+    for date, logs in log_database.items():
+        for log in logs:
+            if "[CRITICAL]" in log or "[WARNING]" in log:
+                total_blocked += 1
+                
+    # 2. Calculate "Requests Protected" 
+    # (Since we only log attacks, we simulate total traffic by multiplying blocks by average safe traffic volume)
+    total_requests = 840000 + (total_blocked * 142)
+    
+    # 3. Calculate a dynamic width for the progress bar (just for visual flair)
+    # Caps at 100% so the UI doesn't break
+    threat_bar_width = min(100, (total_blocked / 50000) * 100)
+    
+    # Format the numbers with commas (e.g., 1,247)
+    return render_template('subscription.html', 
+                           total_blocked=f"{total_blocked:,}",
+                           total_requests=f"{total_requests:,}",
+                           threat_bar=f"{threat_bar_width}%",
+                           uptime="99.99%")
 
 @app.route('/generate-iso-report', methods=['POST'])
 def generate_iso_report():

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOPE! Pro | Dashboard</title>
+    <title>NOPE! Enterprise | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -77,7 +77,7 @@
                     <img src="/static/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
                 </div>
                 <div>
-                    <h1 class="text-4xl font-bold text-gradient tracking-tight">NOPE! Pro</h1>
+                    <h1 class="text-4xl font-bold text-gradient tracking-tight">NOPE! Enterprise</h1>
                     <p class="text-[#9ca3c0] text-sm font-medium">Cloud Edge Protection Active</p>
                 </div>
             </div>
@@ -479,20 +479,37 @@
             chat.scrollTop = chat.scrollHeight;
         }
 
-        function toggleStatus() {
+        async function toggleStatus() {
             isProtectionActive = !isProtectionActive;
             const toggleBg = document.getElementById('status-toggle');
             const toggleCircle = document.getElementById('status-circle');
             const statusText = document.getElementById('status-text');
 
+            // 1. Update the UI visuals
             if (isProtectionActive) {
                 toggleBg.className = "w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all";
                 toggleCircle.style.transform = "translateX(0)";
                 statusText.innerText = "Active";
+                statusText.className = "text-[#b794f6] font-medium text-sm";
             } else {
-                toggleBg.className = "w-12 h-6 bg-white/10 border border-white/10 rounded-full relative cursor-pointer transition-all";
+                toggleBg.className = "w-12 h-6 bg-red-500/20 border border-red-500/50 rounded-full relative cursor-pointer transition-all";
                 toggleCircle.style.transform = "translateX(-24px)";
-                statusText.innerText = "Inactive";
+                statusText.innerText = "WARNING: INACTIVE";
+                statusText.className = "text-red-400 font-bold text-sm animate-pulse";
+            }
+
+            // 2. Tell Python to actually disable/enable the Firewall
+            try {
+                await fetch('/toggle-waf', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ active: isProtectionActive })
+                });
+
+                // 3. Refresh the logs so the "Perimeter Exposed" warning pops up!
+                fetchLogs();
+            } catch(e) {
+                console.error("Failed to toggle WAF.");
             }
         }
 

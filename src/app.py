@@ -6,42 +6,48 @@ import csv
 import json
 from datetime import datetime
 
-# --- PATH SETUP ---
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # The 'src' folder
-# This ensures we go up one level to the REAL root, then into 'static'
+# ==========================================
+# ⚙️ CONFIGURATION & PATHS
+# ==========================================
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, '..'))
-STATIC_DIR = os.path.join(ROOT_DIR, 'static')
 
 app = Flask(__name__, 
             template_folder=os.path.join(BASE_DIR, 'templates'),
-            static_folder=STATIC_DIR,
-            static_url_path='/static') # Explicitly tell Flask the URL prefix
+            static_folder=os.path.join(ROOT_DIR, 'static'),
+            static_url_path='/static')
 
-# 🔑 IMPORTANT: Replace with your actual Gemini API Key!
+# Gemini AI Setup
 genai.configure(api_key="AIzaSyCnVEwTcJUuShYYUyPcp79k70YBJDtSn9Q")
 
 # ==========================================
-# 💾 USER PROFILE "DATABASE" (JSON)
+# 💾 DATA STORE (JSON & IN-MEMORY)
 # ==========================================
 PROFILE_FILE = os.path.join(ROOT_DIR, 'profile.json')
+log_database = {}
+IP_BLOCKLIST = set()
+REQUEST_COUNTS = {}
+AI_RULES = {}
+WAF_ACTIVE = True
+RATE_LIMIT = 10 
+
+# Simulated "Enterprise" Stats
+TOTAL_SCANNED = 14204
+TOTAL_MITIGATED = 2142
 
 DEFAULT_PROFILE = {
     "full_name": "Admin User", "username": "admin_nope", "email": "admin@yourbusiness.com",
     "phone": "+1 (555) 123-4567", "timezone": "UTC-5 (EST)", "country": "United States",
     "bio": "Lead Security Engineer securing the perimeter.",
-    "website_url": "https://yourbusiness.com", "website_name": "My Tech Portfolio",
-    "website_desc": "Personal blog and portfolio.", "website_category": "Technology",
-    "social_twitter": "@nope_admin",
+    "website_url": "https://yourbusiness.com", "social_twitter": "@nope_admin",
     "two_factor": "on", "auto_renew": "on"
 }
 
 def load_profile():
     if os.path.exists(PROFILE_FILE):
         with open(PROFILE_FILE, 'r') as f:
-            try:
-                return json.load(f)
-            except:
-                return DEFAULT_PROFILE
+            try: return json.load(f)
+            except: return DEFAULT_PROFILE
     return DEFAULT_PROFILE
 
 def save_profile(data):
@@ -49,231 +55,143 @@ def save_profile(data):
     profile.update(data)
     profile['two_factor'] = data.get('two_factor', 'off')
     profile['auto_renew'] = data.get('auto_renew', 'off')
-    
     with open(PROFILE_FILE, 'w') as f:
         json.dump(profile, f, indent=4)
 
-# ==========================================
-# 📊 KAGGLE DATASET LOADER
-# ==========================================
-log_database = {}
-
 def load_kaggle_data():
+    """Seeds the log database with historical data for the demo."""
     try:
         csv_path = os.path.join(ROOT_DIR, 'cybersecurity_attacks.csv')
-        
         with open(csv_path, mode='r', encoding='utf-8-sig') as file:
             csv_reader = csv.DictReader(file, quoting=csv.QUOTE_NONE)
-            count = 0
             for row in csv_reader:
                 timestamp = row.get('Timestamp', '')
                 if not timestamp: continue
+                date = timestamp.split(' ')[0]
+                if '/' in date:
+                    p = date.split('/')
+                    date = f"{p[2]}-{p[0].zfill(2)}-{p[1].zfill(2)}" if len(p[2])==4 else date
                 
-                parts = timestamp.split(' ')
-                raw_date = parts[0]
-                
-                if '/' in raw_date:
-                    date_parts = raw_date.split('/')
-                    if len(date_parts[2]) == 4:  
-                        date = f"{date_parts[2]}-{date_parts[0].zfill(2)}-{date_parts[1].zfill(2)}"
-                    else: date = raw_date
-                else: date = raw_date 
-
-                time_val = parts[1] if len(parts) > 1 else "00:00:00"
                 sev = str(row.get('Severity Level', 'Low')).upper()
                 badge = "[CRITICAL]" if "HIGH" in sev or "CRITICAL" in sev else "[WARNING]" if "MEDIUM" in sev else "[INFO]"
-                ip = row.get('Source IP Address', 'Unknown')
-                attack = row.get('Attack Type', 'Threat Detected')
-                payload = str(row.get('Payload Data', '')).replace('"', '')[:45]
-                
-                entry = f"{time_val} {badge} - Blocked {attack} from {ip}. Payload: '{payload}...'"
-                
+                entry = f"{timestamp.split(' ')[1]} {badge} - Blocked {row.get('Attack Type')} from {row.get('Source IP Address')}."
                 if date not in log_database: log_database[date] = []
                 log_database[date].append(entry)
-                count += 1
-                
-        print(f"✅ {count} attacks successfully loaded.")
-        
-    except FileNotFoundError:
-        print(f"⚠️ ERROR: Could not find CSV at {csv_path}")
-    except Exception as e: 
-        print(f"⚠️ CSV Error: {e}")
+    except Exception as e: print(f"⚠️ Data Seed Warning: {e}")
 
 load_kaggle_data()
 
-TODAY = datetime.now().strftime("%Y-%m-%d")
-if TODAY not in log_database:
-    log_database[TODAY] = [f"{datetime.now().strftime('%I:%M %p')} [INFO] - NOPE! Edge Firewall initialized and active."]
+def log_entry(msg, date=None):
+    global TOTAL_SCANNED, TOTAL_MITIGATED
+    if not date: date = datetime.now().strftime("%Y-%m-%d")
+    if date not in log_database: log_database[date] = []
+    log_database[date].insert(0, msg)
+    # Increment global stats on blocks
+    if "BLOCK" in msg or "LIMIT" in msg:
+        TOTAL_MITIGATED += 1
+    TOTAL_SCANNED += 1
 
 # ==========================================
-# 🛡️ NOPE! LIVE FIREWALL (WAF)
+# 🛡️ SECURITY ENGINE (WAF & MIDDLEWARE)
 # ==========================================
 THREAT_PATTERNS = {
     "SQL Injection": re.compile(r"(union|select|insert|update|delete|drop|or 1=1|--)", re.IGNORECASE),
-    "XSS": re.compile(r"(<script>|javascript:|onerror=|<img src=)", re.IGNORECASE)
+    "XSS": re.compile(r"(<script>|javascript:|onerror=|<img src=)", re.IGNORECASE),
+    "Path Traversal": re.compile(r"(\.\./|\.\.\\|/etc/passwd|/windows/win\.ini|/etc/shadow)", re.IGNORECASE)
 }
-
-# 🆕 The Master Switch!
-WAF_ACTIVE = True
 
 @app.before_request
 def live_firewall():
-    global WAF_ACTIVE
-    
-    # 🆕 If the switch is off, let EVERYTHING through!
-    if not WAF_ACTIVE:
+    if not WAF_ACTIVE or request.path in ['/dashboard', '/manage', '/get-logs', '/ask-ai', '/static', '/profile', '/generate-iso-report', '/add-system-log', '/toggle-waf', '/ban-ip', '/api/v1/inspect', '/generate-ai-rule', '/add-rule', '/get-stats']: 
         return
 
-    # Ignore our own API routes so the dashboard doesn't block itself
-    if request.path in ['/dashboard', '/manage', '/get-logs', '/ask-ai', '/static', '/subscribe', '/profile', '/generate-iso-report', '/add-system-log', '/toggle-waf']: 
-        return
+    client_ip = request.remote_addr
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    time_now = datetime.now().strftime('%I:%M %p')
+
+    # 1. Blocklist
+    if client_ip in IP_BLOCKLIST:
+        abort(403, description="🛑 NOPE! EDGE BLOCK: IP Blacklisted.")
+
+    # 2. Rate Limiting
+    now = datetime.now().timestamp()
+    if client_ip not in REQUEST_COUNTS: REQUEST_COUNTS[client_ip] = []
+    REQUEST_COUNTS[client_ip] = [t for t in REQUEST_COUNTS[client_ip] if now - t < 60]
+    REQUEST_COUNTS[client_ip].append(now)
+    if len(REQUEST_COUNTS[client_ip]) > RATE_LIMIT:
+        log_entry(f"{time_now} [WARNING] - RATE LIMIT: {client_ip} exceeded limit.", today_str)
+        abort(429, description="🛑 NOPE! EDGE BLOCK: Rate limit exceeded.")
         
+    # 3. Heuristics & AI Rules
     data = list(request.args.values()) + list(request.form.values())
     for payload in data:
         for threat, pattern in THREAT_PATTERNS.items():
-            if pattern.search(payload):
-                log = f"{datetime.now().strftime('%I:%M %p')} [CRITICAL] - LIVE BLOCK: {threat} from {request.remote_addr}."
-                if TODAY not in log_database: log_database[TODAY] = []
-                log_database[TODAY].insert(0, log)
-                abort(403, description=f"🛑 NOPE! EDGE BLOCK: Suspected {threat} attack detected.")
-
-# 🆕 The route that listens to your dashboard button
-@app.route('/toggle-waf', methods=['POST'])
-def toggle_waf():
-    global WAF_ACTIVE
-    data = request.json
-    WAF_ACTIVE = data.get('active', True)
-    
-    # Add a cool log to the dashboard so everyone sees who turned it off
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    time_now = datetime.now().strftime('%I:%M %p')
-    status_text = "ACTIVATED" if WAF_ACTIVE else "DEACTIVATED (WARNING: PERIMETER EXPOSED)"
-    log_color = "[SYSTEM]" if WAF_ACTIVE else "[WARNING]"
-    
-    entry = f"{time_now} {log_color} - ADMIN ACTION: Edge Firewall {status_text}."
-    
-    if today_str not in log_database: 
-        log_database[today_str] = []
-    log_database[today_str].insert(0, entry)
-    
-    return jsonify({"status": "success", "waf_active": WAF_ACTIVE})
+            if pattern.search(str(payload)):
+                log_entry(f"{time_now} [CRITICAL] - LIVE BLOCK: {threat} from {client_ip}.", today_str)
+                abort(403, description=f"🛑 NOPE! EDGE BLOCK: {threat} detected.")
+        for name, pattern in AI_RULES.items():
+            if re.search(pattern, str(payload), re.IGNORECASE):
+                log_entry(f"{time_now} [CRITICAL] - AI RULE BLOCK: {name} from {client_ip}.", today_str)
+                abort(403, description=f"🛑 NOPE! AI-GEN BLOCK: {name}.")
 
 # ==========================================
-# 🌐 ROUTES
+# 🤖 API ENDPOINTS
+# ==========================================
+@app.route('/get-stats')
+def get_stats():
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    today_logs = log_database.get(today_str, [])
+    today_count = sum(1 for log in today_logs if "BLOCK" in log)
+    return jsonify({
+        "total_scanned": f"{TOTAL_SCANNED:,}",
+        "total_mitigated": f"{TOTAL_MITIGATED:,}",
+        "today_count": today_count,
+        "nodes_online": 2 if WAF_ACTIVE else 1
+    })
+
+@app.route('/api/v1/inspect', methods=['POST'])
+def inspect_payload():
+    data = request.json
+    payload, client_ip, source = data.get('payload', ''), data.get('ip', request.remote_addr), data.get('source', 'External')
+    
+    if client_ip in IP_BLOCKLIST: return jsonify({"status": "blocked", "reason": "IP Banned"}), 403
+
+    for threat, pattern in THREAT_PATTERNS.items():
+        if pattern.search(str(payload)):
+            log_entry(f"{datetime.now().strftime('%I:%M %p')} [CRITICAL] - EXTERNAL BLOCK: {threat} on {source} from {client_ip}.")
+            return jsonify({"status": "blocked", "reason": threat}), 403
+    return jsonify({"status": "allowed"}), 200
+
+@app.route('/ask-ai', methods=['POST'])
+def ask_ai():
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        prompt = f"Analyze log: {request.json.get('log_context')}. Risk Score 1-10 ([THREAT_LEVEL: X/10]). Explain and suggest fix. Admin Question: {request.json.get('message')}"
+        return jsonify({"response": model.generate_content(prompt).text})
+    except: return jsonify({"response": "Analysis Complete: Threat dropped by WAF heuristics."})
+
+@app.route('/generate-ai-rule', methods=['POST'])
+def generate_ai_rule():
+    try:
+        model = genai.GenerativeModel('gemini-2.5-flash')
+        prompt = f"Based on log: {request.json.get('log_context')}, return ONLY JSON: {{\"rule_name\": \"Name\", \"pattern\": \"regex\"}}"
+        resp = model.generate_content(prompt)
+        clean = re.sub(r'```json\n?|\n?```', '', resp.text).strip()
+        return jsonify(json.loads(clean))
+    except: return jsonify({"error": "AI Rule Gen failed"}), 500
+
+# ==========================================
+# 🌐 UI ROUTES
 # ==========================================
 @app.route('/')
 def home(): return render_template('index.html')
 
-@app.route('/subscribe', methods=['POST'])
-def subscribe(): 
-    # Grab the email they typed into the login box
-    login_email = request.form.get('email')
-    
-    # If they typed one, save it to their permanent profile!
-    if login_email:
-        profile_data = load_profile()
-        profile_data['email'] = login_email
-        save_profile(profile_data)
-        
-    return redirect(url_for('dashboard'))
-
-@app.route('/add-system-log', methods=['POST'])
-def add_system_log():
-    msg = request.json.get('message')
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    time_now = datetime.now().strftime('%I:%M %p')
-    
-    # 🆕 Now it saves as a SYSTEM log!
-    entry = f"{time_now} [SYSTEM] - {msg}"
-    
-    if today_str not in log_database: 
-        log_database[today_str] = []
-    
-    log_database[today_str].insert(0, entry)
-    return jsonify({"status": "success"})
-
 @app.route('/dashboard')
-def dashboard(): 
-    # Calculate real stats for today!
+def dashboard():
     today_str = datetime.now().strftime("%Y-%m-%d")
     today_logs = log_database.get(today_str, [])
-    
-    # Count blocks (subtracting the 1 "initialized" log)
-    real_count = 0
-    for log in today_logs:
-        if "LIVE BLOCK" in log:
-            real_count += 1
-            
-    return render_template('dashboard.html', today_count=real_count)
-
-@app.route('/manage')
-def manage(): 
-    # 1. Count REAL blocked threats across all days in the database
-    total_blocked = 0
-    for date, logs in log_database.items():
-        for log in logs:
-            if "[CRITICAL]" in log or "[WARNING]" in log:
-                total_blocked += 1
-                
-    # 2. Calculate "Requests Protected" 
-    # (Since we only log attacks, we simulate total traffic by multiplying blocks by average safe traffic volume)
-    total_requests = 840000 + (total_blocked * 142)
-    
-    # 3. Calculate a dynamic width for the progress bar (just for visual flair)
-    # Caps at 100% so the UI doesn't break
-    threat_bar_width = min(100, (total_blocked / 50000) * 100)
-    
-    # Format the numbers with commas (e.g., 1,247)
-    return render_template('subscription.html', 
-                           total_blocked=f"{total_blocked:,}",
-                           total_requests=f"{total_requests:,}",
-                           threat_bar=f"{threat_bar_width}%",
-                           uptime="99.99%")
-
-@app.route('/generate-iso-report', methods=['POST'])
-def generate_iso_report():
-    try:
-        date = request.json.get('date')
-        logs = log_database.get(date, [])
-        
-        if not logs or "Secure" in logs[0]:
-            return jsonify({"report": f"ISO 27001 Compliance Report for {date}\n\nRESULT: No incidents detected. System integrity maintained."})
-
-        # The Prompt: Telling Gemini to act like a Compliance Auditor
-        log_text = "\n".join(logs)
-        prompt = (
-            f"Act as an ISO 27001 Lead Auditor. Create a professional Security Incident Report for the date {date} "
-            f"based on these firewall logs:\n{log_text}\n\n"
-            "Format the response with these sections:\n"
-            "1. EXECUTIVE SUMMARY\n"
-            "2. ISO 27001 CONTROL MAPPING (focus on Annex A.12)\n"
-            "3. THREAT LANDSCAPE ANALYSIS\n"
-            "4. RECOMMENDED REMEDIATION"
-        )
-        
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        response = model.generate_content(prompt)
-        return jsonify({"report": response.text})
-    except Exception as e:
-        print(f"🔥 GEMINI API ERROR: {e}")
-        
-        # 🛡️ THE HACKATHON FALLBACK REPORT 
-        # If the API hits a limit during your demo, the judges will see this instead of an error!
-        fallback_report = """**1. EXECUTIVE SUMMARY**
-(Cached Report) AI generation is currently rate-limited, but perimeter defenses are operating nominally. All edge nodes report 100% uptime.
-
-**2. ISO 27001 CONTROL MAPPING**
-- **Annex A.12.4.1 (Event Logging):** WAF logs are being successfully recorded and protected from tampering.
-- **Annex A.12.2.1 (Malware Controls):** Real-time heuristic blocking is active and dropping malicious payloads.
-
-**3. THREAT LANDSCAPE ANALYSIS**
-The firewall successfully intercepted automated probing. No payload execution occurred. The origin server remains uncompromised.
-
-**4. RECOMMENDED REMEDIATION**
-1. Continue automated log retention.
-2. Upgrade to the Enterprise API tier to increase real-time AI processing limits."""
-
-        return jsonify({"report": fallback_report})
+    count = sum(1 for log in today_logs if "BLOCK" in log)
+    return render_template('dashboard.html', today_count=count)
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -284,34 +202,48 @@ def profile():
 
 @app.route('/get-logs', methods=['POST'])
 def get_logs():
-    date = request.json.get('date')
-    return jsonify({"logs": log_database.get(date, ["✅ Perimeter Secure. No threats detected."])})
+    return jsonify({"logs": log_database.get(request.json.get('date'), ["✅ Perimeter Secure."])})
 
-@app.route('/ask-ai', methods=['POST'])
-def ask_ai():
-    try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        prompt = f"Analyze log: {request.json.get('log_context')}. Question: {request.json.get('message')}"
-        response = model.generate_content(prompt)
-        return jsonify({"response": response.text})
-    except:
-        return jsonify({"response": "Analysis Complete: Threat dropped by WAF heuristics."})
+@app.route('/toggle-waf', methods=['POST'])
+def toggle_waf():
+    global WAF_ACTIVE
+    WAF_ACTIVE = request.json.get('active', True)
+    status = "ACTIVATED" if WAF_ACTIVE else "DEACTIVATED (PERIMETER EXPOSED)"
+    log_entry(f"{datetime.now().strftime('%I:%M %p')} [SYSTEM] - ADMIN ACTION: WAF {status}.")
+    return jsonify({"waf_active": WAF_ACTIVE})
 
-# ==========================================
-# 🎯 DUMMY TARGET SITE FOR TESTING
-# ==========================================
-@app.route('/target', methods=['GET', 'POST'])
+@app.route('/add-rule', methods=['POST'])
+def add_rule():
+    name, pattern = request.json.get('rule_name'), request.json.get('pattern')
+    if name and pattern:
+        AI_RULES[name] = pattern
+        log_entry(f"{datetime.now().strftime('%I:%M %p')} [SYSTEM] - ADMIN ACTION: Applied AI Rule '{name}'.")
+        return jsonify({"status": "success"})
+    return abort(400)
+
+@app.route('/ban-ip', methods=['POST'])
+def ban_ip():
+    ip = request.json.get('ip')
+    if ip:
+        IP_BLOCKLIST.add(ip)
+        log_entry(f"{datetime.now().strftime('%I:%M %p')} [SYSTEM] - ADMIN ACTION: IP {ip} Banned.")
+        return jsonify({"status": "success"})
+    return abort(400)
+
+@app.route('/add-system-log', methods=['POST'])
+def add_system_log():
+    msg = request.json.get('message')
+    log_entry(f"{datetime.now().strftime('%I:%M %p')} [SYSTEM] - {msg}")
+    return jsonify({"status": "success"})
+
+@app.route('/target', methods=['GET'])
 def target_site():
-    # If the firewall is OFF, and they send an attack, they will see this hacked message!
-    if request.method == 'POST':
-        username = request.form.get('username', '')
-        if "<script>" in username or "OR 1=1" in username.upper():
-            return "<h1>💀 YOU HAVE BEEN HACKED! (Firewall was bypassed)</h1><p>Malicious payload executed successfully.</p>"
-        return "<h1>✅ Login Attempted safely.</h1>"
-        
-    # If it's a normal visit, just show the fake login page
     return render_template('dummy.html')
 
+@app.route('/submit-comment', methods=['POST'])
+def submit_comment():
+    # If it reached here, it passed the WAF middleware!
+    return "<h1>✅ NOPE! EDGE</h1><p>Your comment was safely processed.</p>"
+
 if __name__ == '__main__':
-    # 🛑 TURN OFF DEBUG MODE so the server stops wiping its memory when you save a file!
     app.run(host='0.0.0.0', port=8080, debug=False)

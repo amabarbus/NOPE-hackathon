@@ -1,7 +1,47 @@
+# --- PYTHON ---
 venv/
+.venv/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- NOPE! LOGS & DATA ---
 *.log
-*.db
-get-pip.py
-test_output.html
-*.json
+hub.log
+partner.log
+generator.log
+profile.json
+nope.db
+.env
+
+# --- OS / IDE ---
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+
+# --- PROJECT SPECIFIC ---
+.gemini/
+/home/nmw/.gemini/tmp/

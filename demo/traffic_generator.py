@@ -18,25 +18,30 @@ ATTACKS = [
     ("XSS", "<img src=x onerror=alert(1)>")
 ]
 
+HONEYPOTS = ['/.env', '/wp-admin', '/.git', '/phpmyadmin']
+
 def run_generator():
     print("🚀 NOPE! Live Traffic Generator Active...")
     print("Simulating real-world traffic to Hub and Partner Site...")
     
     while True:
         try:
-            # 70% chance of safe traffic, 30% chance of attack
-            is_attack = random.random() < 0.3
+            # 60% safe, 30% attack, 10% honeypot
+            rand = random.random()
             target = random.choice([HUB_URL, PARTNER_URL])
             
-            if is_attack:
-                threat_name, payload = random.choice(ATTACKS)
-                # Send to Hub or Partner
-                requests.post(f"{target}/submit-comment", data={"comment": payload}, timeout=2)
-                print(f"🔥 [ATTACK] Sent {threat_name} to {target}")
-            else:
+            if rand < 0.6:
                 msg = random.choice(SAFE_MESSAGES)
                 requests.post(f"{target}/submit-comment", data={"comment": msg}, timeout=2)
                 print(f"✅ [SAFE] Sent message to {target}")
+            elif rand < 0.9:
+                threat_name, payload = random.choice(ATTACKS)
+                requests.post(f"{target}/submit-comment", data={"comment": payload}, timeout=2)
+                print(f"🔥 [ATTACK] Sent {threat_name} to {target}")
+            else:
+                trap = random.choice(HONEYPOTS)
+                requests.get(f"{target}{trap}", timeout=2)
+                print(f"🪤 [HONEYPOT] Triggered trap {trap} on {target}")
                 
         except Exception as e:
             print(f"⚠️ Generator error (Server offline?): {e}")

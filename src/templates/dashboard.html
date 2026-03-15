@@ -7,273 +7,201 @@
     <title>NOPE! Enterprise | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: #0B0E14;
-        }
-
-        .glass-panel {
-            background: rgba(20, 24, 34, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1.25rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        .text-gradient {
-            background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-            }
-
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        .animate-slide-in {
-            animation: slideIn 0.3s ease-out forwards;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #0B0E14; color: white; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { background: rgba(20, 24, 34, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.25rem; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .text-gradient { background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .threat-dot { position: absolute; width: 8px; height: 8px; background: #ff4d4d; border-radius: 50%; box-shadow: 0 0 15px #ff4d4d; transform: translate(-50%, -50%); z-index: 20; }
+        .threat-label { position: absolute; transform: translate(10px, -50%); font-size: 9px; font-weight: 900; color: #ff4d4d; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; text-shadow: 0 0 10px rgba(255,77,77,0.5); z-index: 30; }
+        @keyframes pulse-threat { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; } 100% { transform: translate(-50%, -50%) scale(5); opacity: 0; } }
+        .threat-pulse { position: absolute; width: 30px; height: 30px; background: rgba(255, 77, 77, 0.2); border-radius: 50%; transform: translate(-50%, -50%); animation: pulse-threat 2s infinite; z-index: 10; }
+        .world-map-container { background-image: url('https://simplemaps.com/static/svg/world/world.svg'); background-size: contain; background-repeat: no-repeat; background-position: center; filter: invert(1) grayscale(1) opacity(0.1); width: 100%; height: 100%; position: absolute; inset: 0; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
     </style>
 </head>
 
-<body class="text-white min-h-screen relative overflow-hidden flex flex-col">
+<body class="min-h-screen relative overflow-hidden flex flex-col p-8">
 
     <div class="fixed inset-0 z-0 pointer-events-none">
-        <div class="absolute top-20 left-20 w-96 h-96 bg-[#b794f6] rounded-full blur-[150px] opacity-20 animate-pulse">
-        </div>
-        <div class="absolute top-40 right-40 w-96 h-96 bg-[#6b8cff] rounded-full blur-[150px] opacity-20 animate-pulse">
-        </div>
+        <div class="absolute top-20 left-20 w-96 h-96 bg-[#b794f6] rounded-full blur-[150px] opacity-10 animate-pulse"></div>
+        <div class="absolute top-40 right-40 w-96 h-96 bg-[#6b8cff] rounded-full blur-[150px] opacity-10 animate-pulse"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto p-8 h-screen flex flex-col w-full relative z-10">
+    <div class="max-w-7xl mx-auto h-full flex flex-col w-full relative z-10 gap-6">
 
-        <div class="flex justify-between items-center mb-8 shrink-0">
+        <!-- HEADER -->
+        <div class="flex justify-between items-center shrink-0">
             <div class="flex items-center gap-4">
-                <div
-                    class="p-2 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
-                    <img src="/static/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                <div class="p-2 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
+                    <i data-lucide="shield" class="w-10 h-10 text-white"></i>
                 </div>
                 <div>
-                    <h1 class="text-4xl font-bold text-gradient tracking-tight">NOPE! Enterprise</h1>
-                    <p class="text-[#9ca3c0] text-sm font-medium">Cloud Edge Protection Active</p>
+                    <h1 class="text-4xl font-bold text-gradient tracking-tight">NOPE! Hub</h1>
+                    <p class="text-[#9ca3c0] text-sm font-medium">Mission Control & Edge Intelligence</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="/profile"
-                    class="flex items-center gap-2 px-4 py-2 border border-[#b794f6]/30 bg-[#b794f6]/10 rounded-lg text-sm text-[#b794f6] hover:bg-[#b794f6] hover:text-white transition font-medium">
+                <a href="/profile" class="flex items-center gap-2 px-4 py-2 border border-[#b794f6]/30 bg-[#b794f6]/10 rounded-lg text-sm text-[#b794f6] hover:bg-[#b794f6] hover:text-white transition font-medium">
                     <i data-lucide="user" class="w-4 h-4"></i> Profile
                 </a>
-                <a href="/"
-                    class="px-4 py-2 border border-white/10 rounded-lg text-sm text-[#9ca3c0] hover:text-white hover:bg-white/5 transition">Sign
-                    Out</a>
+                <a href="/logout" class="px-4 py-2 border border-white/10 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition">Sign Out</a>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 shrink-0">
+        <!-- TOP BAR -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 shrink-0">
             <div class="lg:col-span-2 glass-panel p-6 flex items-center justify-between">
                 <div class="flex items-center gap-4">
-                    <div class="p-3 bg-green-500/10 rounded-xl" id="system-health-icon">
-                        <i data-lucide="shield-check" class="text-green-400 w-6 h-6"></i>
-                    </div>
+                    <div id="health-icon-bg" class="p-3 bg-green-500/10 rounded-xl"><i id="health-icon" data-lucide="shield-check" class="text-green-400 w-6 h-6"></i></div>
                     <div>
-                        <h3 class="text-lg font-semibold" id="system-health-title">System Status: Active</h3>
+                        <h3 class="text-lg font-semibold" id="health-title">System Status: Active</h3>
                         <p class="text-[#9ca3c0] text-sm"><span id="nodes-count">2</span> Edge Nodes reporting active</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span id="status-text" class="text-[#b794f6] font-medium text-sm">Active</span>
-                    <div id="status-toggle" onclick="toggleStatus()"
-                        class="w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all">
-                        <div id="status-circle"
-                            class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all"></div>
+                    <span id="status-text" class="text-[#b794f6] font-medium text-sm">WAF Enabled</span>
+                    <div id="status-toggle" onclick="toggleStatus()" class="w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all">
+                        <div id="status-circle" class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition-all"></div>
                     </div>
                 </div>
             </div>
             <div class="glass-panel p-6 flex flex-col justify-between">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h3 class="font-bold">Enterprise Plan</h3>
+                        <h3 class="font-bold text-sm">Enterprise Plan</h3>
                         <p class="text-[#9ca3c0] text-xs">yourbusiness.com</p>
                     </div>
                     <i data-lucide="credit-card" class="text-[#6b8cff] w-5 h-5"></i>
                 </div>
-                <a href="/manage"
-                    class="mt-4 block text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-medium transition">Manage
-                    Subscription</a>
+                <a href="/manage" class="mt-4 block text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition">View Billing</a>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 shrink-0">
+        <!-- STATS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 shrink-0">
             <div class="glass-panel p-5 border-l-4 border-l-[#94d7f6]">
-                <p class="text-[#9ca3c0] text-xs mb-1 uppercase tracking-wider font-bold">Assets Scanned</p>
-                <h2 class="text-2xl font-bold" id="stat-scanned">14,204</h2>
+                <p class="text-[#9ca3c0] text-[10px] font-black uppercase mb-1 tracking-widest">Assets Scanned</p>
+                <h2 class="text-2xl font-bold mono" id="stat-scanned">14,204</h2>
             </div>
             <div class="glass-panel p-5 border-l-4 border-l-[#b794f6]">
-                <p class="text-[#9ca3c0] text-xs mb-1 uppercase tracking-wider font-bold">Threats Mitigated</p>
-                <h2 class="text-2xl font-bold text-[#b794f6]" id="stat-mitigated">2,142</h2>
+                <p class="text-[#9ca3c0] text-[10px] font-black uppercase mb-1 tracking-widest">Threats Mitigated</p>
+                <h2 class="text-2xl font-bold mono text-[#b794f6]" id="stat-mitigated">2,142</h2>
             </div>
-            <div class="glass-panel p-5 border-l-4 border-l-[#6b8cff]">
-                <p class="text-[#9ca3c0] text-xs mb-1 uppercase tracking-wider font-bold">Prevented Today</p>
-                <h2 class="text-2xl font-bold text-[#6b8cff]" id="stat-today">{{ today_count }}</h2>
+            <div class="glass-panel p-5 border-l-4 border-l-red-500">
+                <p class="text-[#9ca3c0] text-[10px] font-black uppercase mb-1 tracking-widest">Today's Blocks</p>
+                <h2 class="text-2xl font-bold mono text-red-400" id="stat-today">0</h2>
             </div>
         </div>
 
+        <!-- MAIN CONSOLE Area -->
         <div class="glass-panel p-6 flex-1 flex flex-col min-h-0 relative">
-
+            
             <div class="flex justify-between items-center mb-6 shrink-0">
-                <h3 class="text-xl font-semibold flex items-center gap-2">
-                    <i data-lucide="activity" class="text-[#94d7f6] w-5 h-5"></i> Attack Logs
-                </h3>
+                <div class="flex items-center gap-4">
+                    <h3 class="text-xl font-semibold flex items-center gap-2">
+                        <i data-lucide="activity" class="text-[#94d7f6] w-5 h-5"></i> <span id="view-title">Incident Feed</span>
+                    </h3>
+                    <div class="flex bg-black/40 p-1 rounded-lg border border-white/5 shadow-inner">
+                        <button onclick="toggleView('logs')" id="btn-logs" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase transition-all bg-[#b794f6] text-white">Logs</button>
+                        <button onclick="toggleView('map')" id="btn-map" class="px-4 py-1.5 rounded-md text-[10px] font-black uppercase transition-all text-[#9ca3c0] hover:text-white">Map</button>
+                    </div>
+                </div>
 
                 <div class="flex gap-3">
-                    <button onclick="generateISO()"
-                        class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 rounded-xl hover:border-blue-400 transition group">
+                    <button onclick="generateISO()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/30 rounded-xl hover:border-blue-400 transition group">
                         <i data-lucide="file-check" class="w-4 h-4 text-blue-400"></i>
                         <span class="text-sm font-medium text-blue-100">ISO 27001 Report</span>
                     </button>
 
                     <div class="relative">
-                        <button onclick="toggleCalendar()"
-                            class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group">
+                        <button onclick="toggleCalendar()" class="flex items-center gap-3 px-4 py-2 bg-black/40 border border-white/10 rounded-xl hover:border-[#b794f6] transition group">
                             <i data-lucide="calendar" class="w-4 h-4 text-[#b794f6]"></i>
-                            <span id="display-date" class="text-sm font-mono">Loading Date...</span>
+                            <span id="display-date" class="text-sm font-mono">Loading...</span>
                             <i data-lucide="chevron-down" class="w-3 h-3 text-[#9ca3c0]"></i>
                         </button>
-
-                        <div id="calendar-popup"
-                            class="absolute top-12 right-0 w-[350px] glass-panel bg-[#1a1f3a]/95 p-5 shadow-2xl z-[100] hidden border border-[#6b8cff]/20">
+                        <div id="calendar-popup" class="absolute top-12 right-0 w-[350px] glass-panel bg-[#1a1f3a]/95 p-5 shadow-2xl z-[100] hidden border border-[#6b8cff]/20">
                             <div class="flex flex-col gap-4">
                                 <div class="flex justify-between items-center gap-2">
                                     <div class="flex items-center bg-white/5 border border-white/10 rounded-xl p-1">
-                                        <button onclick="changeYear(-1)"
-                                            class="p-1 hover:bg-white/10 rounded-lg transition"><i
-                                                data-lucide="chevrons-left" class="w-4 h-4 text-[#b794f6]"></i></button>
+                                        <button onclick="changeYear(-1)" class="p-1 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevrons-left" class="w-4 h-4 text-[#b794f6]"></i></button>
                                         <span id="calendar-year" class="px-2 text-xs font-bold font-mono">2026</span>
-                                        <button onclick="changeYear(1)"
-                                            class="p-1 hover:bg-white/10 rounded-lg transition"><i
-                                                data-lucide="chevrons-right"
-                                                class="w-4 h-4 text-[#b794f6]"></i></button>
+                                        <button onclick="changeYear(1)" class="p-1 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevrons-right" class="w-4 h-4 text-[#b794f6]"></i></button>
                                     </div>
-                                    <button onclick="goToToday()"
-                                        class="flex-1 py-2 bg-[#b794f6]/10 border border-[#b794f6]/30 text-[#b794f6] text-xs font-bold rounded-xl hover:bg-[#b794f6] hover:text-white transition">Go
-                                        to Today</button>
+                                    <button onclick="goToToday()" class="flex-1 py-2 bg-[#b794f6]/10 border border-[#b794f6]/30 text-[#b794f6] text-xs font-bold rounded-xl hover:bg-[#b794f6] hover:text-white transition">Today</button>
                                 </div>
-                                <div
-                                    class="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl p-1">
-                                    <button onclick="changeMonth(-1)"
-                                        class="p-1.5 hover:bg-white/10 rounded-lg transition"><i
-                                            data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                                    <span id="calendar-month-name" class="text-sm font-medium">September</span>
-                                    <button onclick="changeMonth(1)"
-                                        class="p-1.5 hover:bg-white/10 rounded-lg transition"><i
-                                            data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                <div class="flex justify-between items-center bg-white/5 border border-white/10 rounded-xl p-1">
+                                    <button onclick="changeMonth(-1)" class="p-1.5 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                    <span id="calendar-month-name" class="text-sm font-medium">March</span>
+                                    <button onclick="changeMonth(1)" class="p-1.5 hover:bg-white/10 rounded-lg transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                                 </div>
                             </div>
-                            <div
-                                class="grid grid-cols-7 gap-1 text-center text-[11px] font-bold text-[#9ca3c0] mt-4 mb-3 uppercase tracking-wider">
-                                <div>Sun</div>
-                                <div>Mon</div>
-                                <div>Tue</div>
-                                <div>Wed</div>
-                                <div>Thu</div>
-                                <div>Fri</div>
-                                <div>Sat</div>
-                            </div>
-                            <div id="calendar-days" class="grid grid-cols-7 gap-1"></div>
+                            <div id="calendar-days" class="grid grid-cols-7 gap-1 mt-4"></div>
                         </div>
                     </div>
                 </div>
-
                 <input type="hidden" id="log-date" value="">
             </div>
 
-            <div class="overflow-y-auto flex-1 pr-2">
+            <!-- LOGS VIEW -->
+            <div id="logs-container" class="overflow-y-auto flex-1 pr-2">
                 <ul id="log-list" class="space-y-3 pb-4"></ul>
+            </div>
+
+            <!-- MAP VIEW -->
+            <div id="map-container" class="hidden flex-1 relative bg-black/20 rounded-2xl border border-white/5 overflow-hidden">
+                <div class="world-map-container opacity-40"></div>
+                <div id="threat-map-dots" class="absolute inset-0"></div>
+                <div class="absolute top-4 right-4 glass-panel bg-black/80 p-4 border-white/10 backdrop-blur-md min-w-[150px]">
+                    <h4 class="text-[9px] font-black uppercase text-[#9ca3c0] mb-2 tracking-widest border-b border-white/5 pb-1">Top Origins</h4>
+                    <div id="map-stats" class="space-y-2 mt-2"></div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- MODALS -->
     <div id="ai-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden flex justify-end">
-        <div
-            class="w-full max-w-md h-full glass-panel !rounded-none border-y-0 border-r-0 flex flex-col animate-slide-in bg-[#0B0E14]/95">
+        <div class="w-full max-w-md h-full glass-panel !rounded-none border-y-0 border-r-0 flex flex-col bg-[#0B0E14]/95 shadow-2xl">
             <div class="p-6 border-b border-white/10 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="p-2 bg-[#b794f6]/20 rounded-lg"><i data-lucide="bot" class="text-[#b794f6] w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-sm">Gemini Threat Analyst</h3>
+                    <div class="p-2 bg-[#b794f6]/20 rounded-lg"><i data-lucide="bot" class="text-[#b794f6] w-5 h-5"></i></div>
+                    <h3 class="font-bold tracking-tight uppercase text-sm">Gemini Analyst</h3>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="generateRule()" id="rule-gen-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500 border border-blue-500/30 rounded-lg text-[10px] font-bold transition-all group">
-                        <i data-lucide="zap" class="w-3 h-3 text-blue-400 group-hover:text-white"></i> AI GENERATE RULE
+                    <button onclick="generateRule()" id="rule-gen-btn" class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500 border border-blue-500/30 rounded-lg text-[10px] font-black transition-all group">
+                        <i data-lucide="zap" class="w-3 h-3 text-blue-400 group-hover:text-white"></i> AI RULE
                     </button>
                     <button onclick="closeModal()" class="p-2 hover:bg-white/5 rounded-lg transition"><i data-lucide="x" class="w-5 h-5"></i></button>
                 </div>
             </div>
-            <div class="flex-1 overflow-y-auto p-6 space-y-4" id="chat-box"></div>
-            <div class="p-6 border-t border-white/10 bg-black/20">
-                <div class="flex gap-2 relative">
-                    <input type="text" id="user-input"
-                        class="w-full bg-black/60 border border-white/10 rounded-xl py-3 px-4 text-sm focus:border-[#b794f6] outline-none"
-                        placeholder="Ask about this attack...">
-                    <button onclick="sendMessage()"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[#b794f6] rounded-lg">
-                        <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                    </button>
-                </div>
+            <div class="flex-1 overflow-y-auto p-6 space-y-4 mono text-xs" id="chat-box"></div>
+            <div class="p-6 border-t border-white/10 bg-black/20 flex gap-2">
+                <input type="text" id="user-input" class="flex-1 bg-black/60 border border-white/10 rounded-xl py-3 px-4 text-sm outline-none focus:border-[#b794f6]" placeholder="Ask analyst...">
+                <button onclick="sendMessage()" class="p-3 bg-[#b794f6] rounded-xl hover:scale-105 transition"><i data-lucide="send" class="w-4 h-4"></i></button>
             </div>
         </div>
     </div>
 
-    <div id="iso-modal"
-        class="fixed inset-0 bg-black/80 backdrop-blur-md z-[300] hidden flex items-center justify-center p-4">
+    <div id="iso-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[300] hidden flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-3xl max-h-[80vh] flex flex-col p-8 border-[#6b8cff]/30">
             <div class="flex justify-between items-center mb-6">
                 <div class="flex items-center gap-3">
                     <i data-lucide="clipboard-check" class="text-blue-400 w-6 h-6"></i>
-                    <h2 class="text-2xl font-bold text-gradient">Regulatory Compliance Report</h2>
+                    <h2 class="text-2xl font-bold text-gradient uppercase tracking-tight">ISO 27001 Compliance Report</h2>
                 </div>
-                <button onclick="closeISO()" class="p-2 hover:bg-white/10 rounded-full transition"><i
-                        data-lucide="x"></i></button>
+                <button onclick="closeISO()" class="p-2 hover:bg-white/10 rounded-full transition"><i data-lucide="x"></i></button>
             </div>
-
-            <div id="iso-content"
-                class="overflow-y-auto pr-4 text-sm leading-relaxed font-mono text-gray-300 whitespace-pre-wrap custom-scrollbar">
-                Preparing audit data...
-            </div>
-
+            <div id="iso-content" class="overflow-y-auto pr-4 text-xs leading-relaxed font-mono text-gray-300 whitespace-pre-wrap">Preparing report...</div>
             <div id="iso-actions" class="mt-8 hidden justify-end gap-4">
-                <button type="button" onclick="downloadPDF()"
-                    class="px-6 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold hover:bg-white/10 transition flex items-center gap-2 text-white">
-                    <i data-lucide="download" class="w-4 h-4"></i> Download PDF
-                </button>
-                <button type="button" id="ack-btn" onclick="acknowledgeAudit()"
-                    class="px-6 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-500 transition flex items-center gap-2">
-                    Acknowledge Audit
-                </button>
+                <button onclick="downloadPDF()" class="px-6 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-bold hover:bg-white/10 transition flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> PDF Export</button>
+                <button id="ack-btn" onclick="acknowledgeAudit()" class="px-6 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-500 transition">Acknowledge Audit</button>
             </div>
         </div>
     </div>
@@ -282,298 +210,49 @@
         let currentLogContext = "";
         let displayDate = new Date();
         let isProtectionActive = true;
+        let currentView = 'logs';
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             lucide.createIcons();
             const today = new Date();
             selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
             generateCalendar();
+            setInterval(refreshDashboard, 4000);
         });
 
-        function toggleCalendar() {
-            document.getElementById('calendar-popup').classList.toggle('hidden');
-            generateCalendar();
-        }
+        function toggleView(view) {
+            currentView = view;
+            const logCont = document.getElementById('logs-container');
+            const mapCont = document.getElementById('map-container');
+            const btnLogs = document.getElementById('btn-logs');
+            const btnMap = document.getElementById('btn-map');
 
-        function changeYear(offset) {
-            displayDate.setFullYear(displayDate.getFullYear() + offset);
-            generateCalendar();
-        }
-
-        function changeMonth(offset) {
-            displayDate.setMonth(displayDate.getMonth() + offset);
-            generateCalendar();
-        }
-
-        function goToToday() {
-            const today = new Date();
-            selectDate(today.getFullYear(), today.getMonth() + 1, today.getDate());
-            displayDate = new Date();
-            generateCalendar();
-        }
-
-        function generateCalendar() {
-            const year = displayDate.getFullYear();
-            const month = displayDate.getMonth();
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-            document.getElementById('calendar-year').innerText = year;
-            document.getElementById('calendar-month-name').innerText = monthNames[month];
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const prevMonthDays = new Date(year, month, 0).getDate();
-
-            const calendarDays = document.getElementById('calendar-days');
-            let html = '';
-
-            for (let i = firstDay - 1; i >= 0; i--) {
-                html += `<div class="w-10 h-10 flex items-center justify-center text-sm text-white/10">${prevMonthDays - i}</div>`;
+            if(view === 'logs') {
+                logCont.classList.remove('hidden');
+                mapCont.classList.add('hidden');
+                btnLogs.className = "px-4 py-1.5 rounded-md text-[10px] font-black uppercase bg-[#b794f6] text-white";
+                btnMap.className = "px-4 py-1.5 rounded-md text-[10px] font-black uppercase text-[#9ca3c0] hover:text-white";
+                document.getElementById('view-title').innerText = "Incident Feed";
+            } else {
+                logCont.classList.add('hidden');
+                mapCont.classList.remove('hidden');
+                mapCont.classList.add('flex');
+                btnMap.className = "px-4 py-1.5 rounded-md text-[10px] font-black uppercase bg-[#b794f6] text-white";
+                btnLogs.className = "px-4 py-1.5 rounded-md text-[10px] font-black uppercase text-[#9ca3c0] hover:text-white";
+                document.getElementById('view-title').innerText = "Cyber Command Map";
             }
-
-            const selectedDateStr = document.getElementById('log-date').value;
-            const today = new Date();
-            const todayStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-
-            for (let i = 1; i <= daysInMonth; i++) {
-                const m = (month + 1).toString().padStart(2, '0');
-                const d = i.toString().padStart(2, '0');
-                const dateStr = `${year}-${m}-${d}`;
-
-                let btnClass = "w-10 h-10 rounded-xl text-sm transition-all flex items-center justify-center ";
-
-                if (dateStr === selectedDateStr) {
-                    btnClass += "bg-[#b794f6] text-white shadow-lg font-bold scale-110 z-10";
-                } else if (dateStr === todayStr) {
-                    btnClass += "text-[#b794f6] font-bold border border-[#b794f6]/30 bg-[#b794f6]/5";
-                } else {
-                    btnClass += "text-[#e2e8f0] hover:bg-white/10";
-                }
-
-                html += `<button onclick="selectDate(${year},${month + 1},${i})" class="${btnClass}">${i}</button>`;
-            }
-            calendarDays.innerHTML = html;
-        }
-
-        function selectDate(y, m, d) {
-            const names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const formatted = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
-
-            const dateInput = document.getElementById('log-date');
-            if (dateInput) dateInput.value = formatted;
-
-            const displaySpan = document.getElementById('display-date');
-            if (displaySpan) displaySpan.innerText = `${names[m - 1]} ${d}, ${y}`;
-
-            const popup = document.getElementById('calendar-popup');
-            if (popup) popup.classList.add('hidden');
-
-            fetchLogs();
-        }
-
-        async function fetchLogs() {
-            const dateInput = document.getElementById('log-date');
-            if (!dateInput) return;
-            const date = dateInput.value;
-            const logList = document.getElementById('log-list');
-
-            try {
-                const response = await fetch('/get-logs', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: date })
-                });
-                const data = await response.json();
-
-                logList.innerHTML = '';
-
-                if (!data.logs || data.logs.length === 0 || data.logs[0].includes("Secure")) {
-                    logList.innerHTML = `
-                <li class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-green-400 text-center text-sm font-medium flex items-center justify-center gap-2">
-                    <i data-lucide="shield-check" class="w-5 h-5"></i> ✅ Perimeter Secure. No threats detected on this date.
-                </li>`;
-                    lucide.createIcons();
-                    return;
-                }
-
-                logList.innerHTML = data.logs.map(log => {
-                    let badge = '';
-                    let bgClass = 'bg-black/40 border-white/5 hover:border-white/10'; // Default styling
-                    let showBan = false;
-
-                    if (log.includes('[CRITICAL]')) {
-                        badge = '<span class="px-2.5 py-1 bg-red-500/10 text-red-400 border border-red-500/20 rounded-md text-[10px] font-bold tracking-wide">CRITICAL</span>';
-                        showBan = true;
-                    } else if (log.includes('[WARNING]')) {
-                        badge = '<span class="px-2.5 py-1 bg-orange-500/10 text-orange-400 border border-orange-500/20 rounded-md text-[10px] font-bold tracking-wide">WARNING</span>';
-                        showBan = true;
-                    } else if (log.includes('[SYSTEM]')) {
-                        // 🆕 PERMANENT GREEN STYLING FOR AUDIT LOGS!
-                        badge = '<span class="px-2.5 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-md text-[10px] font-bold tracking-wide">SYSTEM</span>';
-                        bgClass = 'bg-green-500/10 border-green-500/30';
-                    } else {
-                        badge = '<span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-[10px] font-bold tracking-wide">INFO</span>';
-                    }
-
-                    let cleanLog = log.replace('[CRITICAL]', '').replace('[WARNING]', '').replace('[INFO]', '').replace('[SYSTEM]', '');
-                    
-                    // Extract IP for banning
-                    let ipMatch = log.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/);
-                    let ip = ipMatch ? ipMatch[0] : null;
-
-                    return `
-                <li class="${bgClass} border rounded-xl p-4 transition flex justify-between items-center group cursor-pointer" onclick="openModal('${log.replace(/'/g, "\\'")}')">
-                    <div class="flex items-center gap-4 overflow-hidden pointer-events-none">
-                        ${badge}
-                        <span class="text-[#e2e8f0] text-sm font-mono truncate">${cleanLog}</span>
-                    </div>
-                    ${showBan && ip ? `
-                    <button onclick="event.stopPropagation(); banIP('${ip}')" class="hidden group-hover:flex items-center gap-1.5 px-3 py-1.5 bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 rounded-lg text-[10px] font-bold transition-all">
-                        <i data-lucide="ban" class="w-3 h-3"></i> BAN IP
-                    </button>
-                    ` : ''}
-                </li>`;
-                }).join('');
-
-                lucide.createIcons();
-            } catch (e) {
-                logList.innerHTML = `<li class="text-center text-red-400 text-xs py-4">Sync Error: Is the backend server running?</li>`;
-            }
-        }
-
-        async function banIP(ip) {
-            if(!confirm(`Are you sure you want to PERMANENTLY blacklist IP ${ip}?`)) return;
-            
-            try {
-                await fetch('/ban-ip', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ip: ip })
-                });
-                alert(`IP ${ip} has been added to the Edge Blocklist.`);
-                fetchLogs(); // Refresh logs to show the system action
-            } catch(e) {
-                alert("Failed to ban IP.");
-            }
-        }
-
-        // AI Threat Analysis
-        function openModal(logText) {
-            currentLogContext = logText;
-            document.getElementById('ai-modal').classList.remove('hidden');
-            document.getElementById('chat-box').innerHTML = `
-                <div class="bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#e2e8f0]">
-                    I've analyzed this threat log. What would you like to know about it?
-                </div>`;
-        }
-
-        function closeModal() {
-            document.getElementById('ai-modal').classList.add('hidden');
-        }
-
-        async function generateRule() {
-            const btn = document.getElementById('rule-gen-btn');
-            const chat = document.getElementById('chat-box');
-            
-            btn.disabled = true;
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> GENERATING...`;
-            lucide.createIcons();
-
-            try {
-                const response = await fetch('/generate-ai-rule', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ log_context: currentLogContext })
-                });
-                const data = await response.json();
-
-                if (data.error) throw new Error(data.error);
-
-                chat.innerHTML += `
-                    <div class="bg-blue-600/10 border border-blue-500/30 p-4 rounded-xl text-xs space-y-3">
-                        <div class="font-bold text-blue-400 flex items-center gap-2">
-                            <i data-lucide="shield-plus" class="w-4 h-4"></i> Proposed Security Rule
-                        </div>
-                        <p class="text-white font-mono bg-black/40 p-2 rounded">Name: ${data.rule_name}<br>Pattern: ${data.pattern}</p>
-                        <button onclick="applyRule('${data.rule_name}', '${data.pattern.replace(/\\/g, '\\\\')}')" id="apply-rule-btn" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-bold transition">
-                            Apply Rule to WAF
-                        </button>
-                    </div>
-                `;
-                lucide.createIcons();
-                chat.scrollTop = chat.scrollHeight;
-
-            } catch (e) {
-                alert("AI failed to generate a rule for this payload.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i data-lucide="zap" class="w-3 h-3 text-blue-400"></i> AI GENERATE RULE`;
-                lucide.createIcons();
-            }
-        }
-
-        async function applyRule(name, pattern) {
-            try {
-                await fetch('/add-rule', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ rule_name: name, pattern: pattern })
-                });
-                
-                const btn = document.getElementById('apply-rule-btn');
-                btn.innerHTML = "✅ RULE APPLIED";
-                btn.className = "w-full py-2 bg-green-600 text-white rounded-lg font-bold cursor-not-allowed";
-                btn.disabled = true;
-
-                fetchLogs(); // Show the system log in background
-            } catch(e) {
-                alert("Failed to apply rule.");
-            }
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const chat = document.getElementById('chat-box');
-            const userMsg = input.value;
-
-            if (!userMsg) return;
-
-            chat.innerHTML += `<div class="bg-[#b794f6] text-white p-3 rounded-xl text-xs w-[80%] ml-auto shadow-md">${userMsg}</div>`;
-            input.value = '';
-            chat.scrollTop = chat.scrollHeight;
-
-            const thinkingId = "thinking-" + Date.now();
-            chat.innerHTML += `
-                <div id="${thinkingId}" class="flex items-center gap-2 bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#9ca3c0]">
-                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin text-[#b794f6]"></i>
-                    <span>Gemini is analyzing the threat...</span>
-                </div>
-            `;
-            lucide.createIcons();
-            chat.scrollTop = chat.scrollHeight;
-
-            try {
-                const response = await fetch('/ask-ai', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: userMsg, log_context: currentLogContext })
-                });
-                const data = await response.json();
-
-                const loaderElement = document.getElementById(thinkingId);
-                if (loaderElement) loaderElement.remove();
-
-                // Highlight the Threat Level in the response
-                let formattedResponse = data.response.replace(/\[THREAT_LEVEL: (.*?)\]/g, 
-                    '<div class="mb-3 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 font-bold tracking-tight">⚠️ THREAT LEVEL: $1</div>');
-
-                chat.innerHTML += `<div class="bg-white/5 p-4 rounded-xl text-xs border-l-2 border-[#b794f6] text-[#e2e8f0] leading-relaxed">${formattedResponse}</div>`;
-            } catch (error) {
-                const loaderElement = document.getElementById(thinkingId);
-                if (loaderElement) loaderElement.remove();
-                chat.innerHTML += `<div class="text-red-400 text-[10px] p-2">Failed to connect to AI analyst.</div>`;
-            }
-            chat.scrollTop = chat.scrollHeight;
         }
 
         async function toggleStatus() {
@@ -581,158 +260,135 @@
             const toggleBg = document.getElementById('status-toggle');
             const toggleCircle = document.getElementById('status-circle');
             const statusText = document.getElementById('status-text');
+            const healthTitle = document.getElementById('health-title');
+            const healthIconBg = document.getElementById('health-icon-bg');
+            const healthIcon = document.getElementById('health-icon');
 
-            // 1. Update the UI visuals
             if (isProtectionActive) {
                 toggleBg.className = "w-12 h-6 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-full relative cursor-pointer shadow-lg shadow-[#b794f6]/20 transition-all";
-                toggleCircle.style.transform = "translateX(0)";
-                statusText.innerText = "Active";
+                toggleCircle.style.right = "4px";
+                toggleCircle.style.left = "auto";
+                statusText.innerText = "WAF Enabled";
                 statusText.className = "text-[#b794f6] font-medium text-sm";
+                healthTitle.innerText = "System Status: Active";
+                healthIconBg.className = "p-3 bg-green-500/10 rounded-xl";
+                healthIcon.className = "text-green-400 w-6 h-6";
             } else {
-                toggleBg.className = "w-12 h-6 bg-red-500/20 border border-red-500/50 rounded-full relative cursor-pointer transition-all";
-                toggleCircle.style.transform = "translateX(-24px)";
-                statusText.innerText = "WARNING: INACTIVE";
+                toggleBg.className = "w-12 h-6 bg-red-500/20 border border-red-500/50 rounded-full relative cursor-pointer";
+                toggleCircle.style.right = "auto";
+                toggleCircle.style.left = "4px";
+                statusText.innerText = "WAF DISABLED";
                 statusText.className = "text-red-400 font-bold text-sm animate-pulse";
+                healthTitle.innerText = "System Status: EXPOSED";
+                healthIconBg.className = "p-3 bg-red-500/10 rounded-xl";
+                healthIcon.className = "text-red-400 w-6 h-6";
             }
-
-            // 2. Tell Python to actually disable/enable the Firewall
-            try {
-                await fetch('/toggle-waf', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ active: isProtectionActive })
-                });
-
-                // 3. Refresh the logs so the "Perimeter Exposed" warning pops up!
-                fetchLogs();
-            } catch(e) {
-                console.error("Failed to toggle WAF.");
-            }
-        }
-
-        document.getElementById("user-input").addEventListener("keypress", (e) => { if (e.key === "Enter") sendMessage(); });
-
-        // 🆕 ISO REPORT LOGIC & PDF GENERATION
-        async function generateISO() {
-            const dateInput = document.getElementById('log-date');
-            if (!dateInput || !dateInput.value) {
-                alert("Please select a date first.");
-                return;
-            }
-
-            const modal = document.getElementById('iso-modal');
-            const content = document.getElementById('iso-content');
-            const actions = document.getElementById('iso-actions');
-
-            // Show modal, hide buttons, show loading state
-            modal.classList.remove('hidden');
-            actions.classList.add('hidden');
-            actions.classList.remove('flex');
-
-            content.innerHTML = `<div class="flex items-center gap-3 p-4"><i data-lucide="loader-2" class="animate-spin text-blue-400"></i> <span class="text-white">Analyzing logs for ISO 27001 compliance mapping...</span></div>`;
-            lucide.createIcons();
-
-            try {
-                const response = await fetch('/generate-iso-report', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ date: dateInput.value })
-                });
-                const data = await response.json();
-
-                // Format the AI text, add a dark background specifically for the PDF
-                content.innerHTML = `<div id="pdf-container" class="p-6 bg-[#0B0E14] text-gray-200">
-                    ${data.report.replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-400">$1</strong>')}
-                </div>`;
-
-                // Show the action buttons now that it's done
-                actions.classList.remove('hidden');
-                actions.classList.add('flex');
-            } catch (e) {
-                content.innerHTML = "Failed to reach Compliance Engine. Make sure the backend server is running.";
-            }
-        }
-
-        // Clean PDF Download using html2pdf
-        function downloadPDF() {
-            const element = document.getElementById('pdf-container');
-            const opt = {
-                margin: 0.5,
-                filename: 'ISO_27001_Audit_Report.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, backgroundColor: '#0B0E14' }, // Matches dark theme
-                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            // This grabs just the content text, styles it, and triggers a download
-            html2pdf().set(opt).from(element).save();
-        }
-
-        // Functional Acknowledge Button
-        // Functional Acknowledge Button that talks to Python!
-        // Functional Acknowledge Button
-        async function acknowledgeAudit() {
-            const btn = document.getElementById('ack-btn');
-
-            // 1. Change button appearance to success state
-            btn.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 inline mr-1"></i> Audit Logged`;
-            btn.classList.replace('bg-blue-600', 'bg-green-600');
-            btn.classList.replace('hover:bg-blue-500', 'hover:bg-green-500');
-
-            // 2. Disable the button so the user knows it's done
-            btn.disabled = true;
-            btn.classList.add('opacity-80', 'cursor-not-allowed');
-            lucide.createIcons();
-
-            // 3. Tell Python to save this log permanently
-            await fetch('/add-system-log', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: "ISO 27001 Audit Acknowledged and Signed by Admin." })
-            });
-
-            // 4. Refresh the logs so the green entry appears instantly in the background!
+            await fetch('/toggle-waf', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ active: isProtectionActive }) });
             fetchLogs();
-
-            // 🛑 REMOVED the setTimeout that was closing the window. It stays open until you hit 'X' now!
-        }
-        function closeISO() {
-            document.getElementById('iso-modal').classList.add('hidden');
         }
 
-        // 🆕 AUTO-REFRESH LOGIC FOR DEMO
         async function refreshDashboard() {
             try {
-                const response = await fetch('/get-stats');
-                const data = await response.json();
-                
+                const res = await fetch('/get-stats');
+                const data = await res.json();
                 document.getElementById('stat-scanned').innerText = data.total_scanned;
                 document.getElementById('stat-mitigated').innerText = data.total_mitigated;
                 document.getElementById('stat-today').innerText = data.today_count;
                 document.getElementById('nodes-count').innerText = data.nodes_online;
 
-                if (data.nodes_online < 2) {
-                    document.getElementById('system-health-title').innerText = "System Status: Partial Hub Access";
-                    document.getElementById('system-health-icon').className = "p-3 bg-yellow-500/10 rounded-xl";
-                } else {
-                    document.getElementById('system-health-title').innerText = "System Status: Active";
-                    document.getElementById('system-health-icon').className = "p-3 bg-green-500/10 rounded-xl";
-                }
+                const mapDots = document.getElementById('threat-map-dots');
+                const mapStats = document.getElementById('map-stats');
+                mapDots.innerHTML = ""; mapStats.innerHTML = "";
 
-                // Only refresh logs if we are looking at TODAY
-                const today = new Date();
-                const todayStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-                if (document.getElementById('log-date').value === todayStr) {
-                    fetchLogs();
-                }
-            } catch (e) {
-                console.log("Stats refresh failed.");
+                Object.entries(data.threat_map).forEach(([country, info]) => {
+                    const dot = document.createElement('div'); dot.className = "threat-dot"; dot.style.top = info.coords[0] + "%"; dot.style.left = info.coords[1] + "%";
+                    const pulse = document.createElement('div'); pulse.className = "threat-pulse"; pulse.style.top = info.coords[0] + "%"; pulse.style.left = info.coords[1] + "%";
+                    const label = document.createElement('div'); label.className = "threat-label"; label.innerText = country; label.style.top = info.coords[0] + "%"; label.style.left = info.coords[1] + "%";
+                    mapDots.appendChild(dot); mapDots.appendChild(pulse); mapDots.appendChild(label);
+                    mapStats.innerHTML += `<div class="flex justify-between items-center"><span class="text-[9px] font-black text-[#9ca3c0] uppercase">${country}</span><span class="text-xs font-bold text-red-400 mono">${info.count}</span></div>`;
+                });
+
+                const today = new Date().toISOString().split('T')[0];
+                if (document.getElementById('log-date').value === today) fetchLogs();
+            } catch (e) {}
+        }
+
+        async function fetchLogs() {
+            const date = document.getElementById('log-date').value;
+            const res = await fetch('/get-logs', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ date }) });
+            const data = await res.json();
+            document.getElementById('log-list').innerHTML = data.logs.map(log => {
+                let color = log.includes('CRITICAL') ? 'text-red-400' : log.includes('WARNING') ? 'text-yellow-400' : 'text-blue-400';
+                let escapedLog = escapeHTML(log);
+                return `<li onclick="openModal('${escapedLog.replace(/'/g, "\\'")}')" class="bg-black/40 border border-white/5 p-4 rounded-xl flex justify-between items-center group cursor-pointer hover:border-[#b794f6]/30 transition-all">
+                    <span class="text-xs font-mono truncate text-[#e2e8f0] group-hover:text-white">${escapedLog}</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-white/10 group-hover:text-[#b794f6]"></i>
+                </li>`;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function openModal(log) { currentLogContext = log; document.getElementById('ai-modal').classList.remove('hidden'); document.getElementById('chat-box').innerHTML = `<div class="bg-purple-500/10 p-4 rounded-xl border-l-2 border-purple-500 text-white leading-relaxed">Incident analysis ready. Query the analyst.</div>`; }
+        function closeModal() { document.getElementById('ai-modal').classList.add('hidden'); }
+        async function sendMessage() {
+            const input = document.getElementById('user-input'); if (!input.value) return;
+            const msg = input.value; input.value = "";
+            document.getElementById('chat-box').innerHTML += `<div class="bg-purple-600 p-3 rounded-xl text-white w-[80%] ml-auto shadow-md font-medium">${escapeHTML(msg)}</div>`;
+            const res = await fetch('/ask-ai', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ message: msg, log_context: currentLogContext }) });
+            const data = await res.json();
+            document.getElementById('chat-box').innerHTML += `<div class="bg-white/5 p-4 rounded-xl border-l-2 border-indigo-500 text-[#e2e8f0] leading-relaxed shadow-xl animate-in fade-in slide-in-from-bottom-2">${escapeHTML(data.response)}</div>`;
+            document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+        }
+
+        async function generateRule() {
+            const res = await fetch('/generate-ai-rule', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ log_context: currentLogContext }) });
+            const data = await res.json();
+            if(data.pattern) {
+                await fetch('/add-rule', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+                alert(`Rule Applied: ${data.rule_name}`);
             }
         }
 
-        // Start the pulse!
-        setInterval(refreshDashboard, 3000);
+        async function generateISO() {
+            const modal = document.getElementById('iso-modal'); modal.classList.remove('hidden');
+            const content = document.getElementById('iso-content');
+            content.innerHTML = `<div class="flex items-center gap-3"><i data-lucide="loader-2" class="animate-spin text-blue-400"></i> Mapping logs to ISO 27001 Annex A.12...</div>`;
+            lucide.createIcons();
+            const res = await fetch('/generate-iso-report', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ date: document.getElementById('log-date').value }) });
+            const data = await res.json();
+            content.innerHTML = `<div id="pdf-container" class="p-6 bg-[#0B0E14] text-gray-200 font-mono">${data.report.replace(/\*\*(.*?)\*\*/g, '<strong class="text-blue-400">$1</strong>').replace(/\n/g, '<br>')}</div>`;
+            document.getElementById('iso-actions').classList.remove('hidden'); document.getElementById('iso-actions').classList.add('flex');
+            lucide.createIcons();
+        }
+        function closeISO() { document.getElementById('iso-modal').classList.add('hidden'); }
+        function downloadPDF() { const element = document.getElementById('pdf-container'); html2pdf().from(element).save('Security_Audit.pdf'); }
+        async function acknowledgeAudit() { await fetch('/add-system-log', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ message: "ISO 27001 Audit Signed by Admin." }) }); closeISO(); fetchLogs(); }
 
+        // Calendar Logic
+        function toggleCalendar() { document.getElementById('calendar-popup').classList.toggle('hidden'); }
+        function changeYear(o) { displayDate.setFullYear(displayDate.getFullYear() + o); generateCalendar(); }
+        function changeMonth(o) { displayDate.setMonth(displayDate.getMonth() + o); generateCalendar(); }
+        function goToToday() { const t = new Date(); selectDate(t.getFullYear(), t.getMonth() + 1, t.getDate()); displayDate = new Date(); generateCalendar(); }
+        function selectDate(y, m, d) {
+            const dateStr = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+            document.getElementById('log-date').value = dateStr;
+            document.getElementById('display-date').innerText = `${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][m-1]} ${d}, ${y}`;
+            document.getElementById('calendar-popup').classList.add('hidden');
+            fetchLogs();
+        }
+        function generateCalendar() {
+            const y = displayDate.getFullYear(), m = displayDate.getMonth();
+            document.getElementById('calendar-year').innerText = y;
+            document.getElementById('calendar-month-name').innerText = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][m];
+            const start = new Date(y, m, 1).getDay(), len = new Date(y, m + 1, 0).getDate();
+            let html = '';
+            for (let i = 0; i < start; i++) html += '<div></div>';
+            for (let i = 1; i <= len; i++) {
+                const isSelected = document.getElementById('log-date').value === `${y}-${(m+1).toString().padStart(2, '0')}-${i.toString().padStart(2, '0')}`;
+                html += `<button onclick="selectDate(${y},${m+1},${i})" class="w-10 h-10 rounded-xl text-xs ${isSelected ? 'bg-[#b794f6] text-white font-bold shadow-lg scale-110' : 'text-[#e2e8f0] hover:bg-white/10'}">${i}</button>`;
+            }
+            document.getElementById('calendar-days').innerHTML = html;
+        }
     </script>
 </body>
 

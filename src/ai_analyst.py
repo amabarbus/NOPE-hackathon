@@ -2,7 +2,7 @@ import google.generativeai as genai
 from flask import jsonify
 
 def analyze_threat(user_question, log_context, api_key):
-    genai.configure(api_key=api_key)
+    genai.configure(api_key="AIzaSyCnVEwTcJUuShYYUyPcp79k70YBJDtSn9Q")
     
     system_prompt = f"""
     You are NOPE! AI. Analyze this specific Cloud Firewall log: "{log_context}"

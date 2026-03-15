@@ -4,40 +4,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOPE! | Protect Your Website</title>
+    <title>NOPE! Edge Firewall | Next-Gen Security</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .glass-panel { background: rgba(20, 24, 34, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.25rem; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .text-gradient { background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Floating Animation for Login Box */
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        /* Marquee Animation for Threat Ticker */
+        @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+        .animate-marquee { animation: marquee 20s linear infinite; }
+    </style>
 </head>
 
-<body class="bg-[#0B0E14] text-white min-h-screen flex items-center justify-center font-sans overflow-hidden">
-    <div class="fixed inset-0 -z-10">
-        <div class="absolute top-20 left-20 w-96 h-96 bg-[#b794f6] rounded-full blur-[150px] opacity-20 animate-pulse">
-        </div>
-        <div class="absolute bottom-20 right-20 w-96 h-96 bg-[#6b8cff] rounded-full blur-[150px] opacity-20 animate-pulse"
-            style="animation-delay: 1s"></div>
+<body class="bg-[#0B0E14] text-white min-h-screen relative overflow-x-hidden selection:bg-[#b794f6]/30">
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-[#b794f6] rounded-full blur-[150px] opacity-20 animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-[#6b8cff] rounded-full blur-[150px] opacity-10 animate-pulse" style="animation-delay: 2s"></div>
     </div>
 
-    <div
-        class="text-center p-10 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl shadow-2xl max-w-lg w-full z-10">
-        <div class="flex justify-center mb-6">
-            <div class="p-3 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
-                <img src="/static/images/logo.png" alt="Logo" class="w-10 h-10 object-contain">
+    <nav class="relative z-50 max-w-7xl mx-auto px-8 py-6 flex justify-between items-center border-b border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="p-2 rounded-xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
+            </div>
+            <span class="text-xl font-bold tracking-tight text-white">NOPE! Edge</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-[#9ca3c0]">
+            <a href="#features" class="hover:text-white transition">Features</a>
+            <a href="#about" class="hover:text-white transition">Why Us</a>
+            <a href="#" class="hover:text-white transition">Pricing</a>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-7xl mx-auto px-8 pt-12 pb-24">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center min-h-[75vh]">
+            
+            <div class="flex flex-col gap-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#b794f6]/10 border border-[#b794f6]/30 text-[#b794f6] text-xs font-bold w-fit uppercase tracking-wider">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#b794f6] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-[#b794f6]"></span>
+                    </span>
+                    Gemini AI Integration Live
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                    Enterprise Security. <br>
+                    <span class="text-gradient">Democratized.</span>
+                </h1>
+                
+                <p class="text-lg text-[#9ca3c0] leading-relaxed max-w-lg">
+                    Stop SQL injections, mitigate XSS, and generate ISO 27001 compliance reports instantly. The world's first AI-native Web Application Firewall built for startups.
+                </p>
+                
+                <div class="flex items-center gap-4 mt-4">
+                    <div class="flex -space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-gray-600 border-2 border-[#0B0E14] flex items-center justify-center text-xs">👤</div>
+                        <div class="w-10 h-10 rounded-full bg-gray-500 border-2 border-[#0B0E14] flex items-center justify-center text-xs">👤</div>
+                        <div class="w-10 h-10 rounded-full bg-gray-400 border-2 border-[#0B0E14] flex items-center justify-center text-xs">👤</div>
+                    </div>
+                    <p class="text-sm text-[#9ca3c0]">Trusted by <span class="text-white font-bold">1,200+</span> developers.</p>
+                </div>
+            </div>
+
+            <div class="relative animate-float lg:ml-auto w-full max-w-md">
+                <div class="absolute -inset-1 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-3xl blur opacity-30"></div>
+                
+                <div class="relative glass-panel p-8">
+                    <h2 class="text-2xl font-bold mb-2">Welcome Back</h2>
+                    <p class="text-sm text-[#9ca3c0] mb-8">Enter your credentials to access the perimeter.</p>
+
+                    <form action="/subscribe" method="POST" class="flex flex-col gap-5" id="login-form" novalidate>
+                        
+                        <div class="space-y-1 relative">
+                            <label class="text-xs font-bold text-[#9ca3c0] uppercase tracking-wider">Email Address</label>
+                            <div class="relative">
+                                <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3c0]"></i>
+                                <input type="email" name="email" id="email-input" required placeholder="admin@acme.com" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:border-[#b794f6] focus:ring-1 focus:ring-[#b794f6] outline-none transition placeholder:text-gray-600">
+                            </div>
+                            <p id="email-error" class="hidden text-red-400 text-xs mt-1 absolute -bottom-5 left-0 flex items-center gap-1">
+                                <i data-lucide="alert-circle" class="w-3 h-3"></i> Invalid email format.
+                            </p>
+                        </div>
+
+                        <div class="space-y-1 mt-2">
+                            <label class="text-xs font-bold text-[#9ca3c0] uppercase tracking-wider">Password</label>
+                            <div class="relative">
+                                <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3c0]"></i>
+                                <input type="password" name="password" id="password-input" required placeholder="••••••••" class="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-sm text-white focus:border-[#b794f6] focus:ring-1 focus:ring-[#b794f6] outline-none transition placeholder:text-gray-600">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-xs mt-1 mb-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-[#9ca3c0] hover:text-white transition group select-none">
+                                <div class="relative flex items-center justify-center w-4 h-4 rounded border border-white/20 bg-black/40 group-hover:border-[#b794f6] transition-colors">
+                                    <input type="checkbox" id="remember-checkbox" class="peer absolute opacity-0 w-full h-full cursor-pointer">
+                                    <i data-lucide="check" class="w-3 h-3 text-[#b794f6] opacity-0 peer-checked:opacity-100 transition-opacity"></i>
+                                </div>
+                                Remember device
+                            </label>
+                            <a href="#" class="text-[#b794f6] hover:text-[#94d7f6] transition">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] hover:opacity-90 rounded-xl text-sm font-bold shadow-lg shadow-[#b794f6]/20 transition transform hover:-translate-y-0.5 mt-2">
+                            Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4 inline ml-1"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-        <h1
-            class="text-5xl font-bold mb-4 bg-gradient-to-r from-[#e8e9f3] via-[#b794f6] to-[#6b8cff] bg-clip-text text-transparent pb-2">
-            NOPE!</h1>
-        <p class="text-[#9ca3c0] mb-8 text-lg">Enterprise-grade defense for your personal website. Block hackers,
-            malware, and DDoS attacks with one click.</p>
 
-        <form action="/subscribe" method="POST">
-            <button type="submit"
-                class="w-full py-4 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-lg shadow-[#b794f6]/20 flex justify-center items-center gap-2">
-                Get Protected Now <i data-lucide="arrow-right" class="w-5 h-5"></i>
-            </button>
-        </form>
-    </div>
-    <script>lucide.createIcons();</script>
+        <div class="relative w-full overflow-hidden bg-black/50 border border-white/5 rounded-full py-3 mt-12 mb-20 flex items-center">
+            <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0B0E14] to-transparent z-10"></div>
+            <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0B0E14] to-transparent z-10"></div>
+            
+            <div class="flex gap-8 animate-marquee whitespace-nowrap text-xs font-mono text-[#9ca3c0]">
+                <span class="text-red-400">[CRITICAL]</span> Blocked SQLi from 104.28.19.22
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-orange-400">[WARNING]</span> Rate-limited Botnet at 45.33.2.11
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-red-400">[CRITICAL]</span> Blocked XSS Payload from 185.199.108.153
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-green-400">[SYSTEM]</span> Gemini AI Audit Generated for Node 04
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-red-400">[CRITICAL]</span> Blocked SQLi from 104.28.19.22
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-orange-400">[WARNING]</span> Rate-limited Botnet at 45.33.2.11
+                <span class="text-blue-400 mx-4">•</span>
+                <span class="text-red-400">[CRITICAL]</span> Blocked XSS Payload from 185.199.108.153
+            </div>
+        </div>
+
+        <div class="mb-32">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold w-fit uppercase tracking-wider mb-4">
+                    Zero-Friction Deployment
+                </div>
+                <h2 class="text-3xl font-bold mb-4">Deploy in 60 seconds.</h2>
+                <p class="text-[#9ca3c0] max-w-2xl mx-auto">No agents to install. No complex server configurations. Just route your traffic and let NOPE! handle the rest.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <div class="hidden md:block absolute top-1/2 left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-transparent via-[#6b8cff]/30 to-transparent -translate-y-1/2 z-0"></div>
+
+                <div class="glass-panel p-8 text-center relative z-10 flex flex-col items-center hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 rounded-full bg-black border-2 border-[#6b8cff] flex items-center justify-center text-xl font-bold text-[#6b8cff] mb-6 shadow-[0_0_15px_rgba(107,140,255,0.3)]">1</div>
+                    <h3 class="font-bold mb-2">Update DNS Records</h3>
+                    <p class="text-xs text-[#9ca3c0]">Point your domain to our global edge network. We sit between your users and your server.</p>
+                </div>
+
+                <div class="glass-panel p-8 text-center relative z-10 flex flex-col items-center hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 rounded-full bg-black border-2 border-[#b794f6] flex items-center justify-center text-xl font-bold text-[#b794f6] mb-6 shadow-[0_0_15px_rgba(183,148,246,0.3)]">2</div>
+                    <h3 class="font-bold mb-2">Live Inspection</h3>
+                    <p class="text-xs text-[#9ca3c0]">Our heuristic regex engine instantly drops malicious payloads before they hit your database.</p>
+                </div>
+
+                <div class="glass-panel p-8 text-center relative z-10 flex flex-col items-center hover:-translate-y-2 transition duration-300">
+                    <div class="w-12 h-12 rounded-full bg-black border-2 border-[#94d7f6] flex items-center justify-center text-xl font-bold text-[#94d7f6] mb-6 shadow-[0_0_15px_rgba(148,215,246,0.3)]">3</div>
+                    <h3 class="font-bold mb-2">AI Takes Over</h3>
+                    <p class="text-xs text-[#9ca3c0]">Gemini automatically translates the blocked threats into human-readable logs and compliance reports.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="features" class="mt-32 pt-12 border-t border-white/5">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Security that actually makes sense.</h2>
+                <p class="text-[#9ca3c0] max-w-2xl mx-auto">We abstracted away the complex command lines and built a visually intuitive firewall driven by artificial intelligence.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 hover:border-[#6b8cff]/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-[#6b8cff]/10 flex items-center justify-center mb-6 border border-[#6b8cff]/20">
+                        <i data-lucide="shield-alert" class="text-[#6b8cff] w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Real-Time Payload Blocking</h3>
+                    <p class="text-sm text-[#9ca3c0] leading-relaxed">Our edge nodes inspect every incoming HTTP request, instantly dropping XSS, SQLi, and malicious bot traffic before it touches your server.</p>
+                </div>
+
+                <div class="glass-panel p-8 hover:border-[#b794f6]/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-[#b794f6]/10 flex items-center justify-center mb-6 border border-[#b794f6]/20">
+                        <i data-lucide="bot" class="text-[#b794f6] w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Gemini Threat Analyst</h3>
+                    <p class="text-sm text-[#9ca3c0] leading-relaxed">Stop googling error codes. Click on any blocked threat to get a plain-English explanation of what the hacker was trying to do, powered by Google Gemini.</p>
+                </div>
+
+                <div class="glass-panel p-8 hover:border-blue-400/50 transition duration-300">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6 border border-blue-500/20">
+                        <i data-lucide="file-check" class="text-blue-400 w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instant ISO Audits</h3>
+                    <p class="text-sm text-[#9ca3c0] leading-relaxed">Need to prove your security posture to investors? Generate fully formatted ISO 27001 compliance PDFs from your firewall logs with a single click.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="about" class="mt-32 mb-20 glass-panel p-12 relative overflow-hidden flex flex-col items-center text-center">
+            <i data-lucide="fingerprint" class="absolute -right-10 -bottom-10 w-64 h-64 text-white/[0.02] rotate-12"></i>
+            
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[#9ca3c0] text-xs font-bold mb-6 uppercase tracking-wider">
+                Who We Are
+            </div>
+            <h2 class="text-3xl font-bold mb-6 max-w-2xl relative z-10">Built by developers, for founders.</h2>
+            <p class="text-[#9ca3c0] max-w-3xl leading-relaxed relative z-10 mb-8">
+                We started NOPE! because we were tired of complex enterprise security tools that required a dedicated team just to configure. We believe that whether you are an indie hacker launching a side hustle or a scaling startup, you deserve impenetrable edge security without the bloated price tag.
+            </p>
+            <div class="flex items-center gap-6 text-sm font-bold text-white relative z-10">
+                <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="text-green-400 w-4 h-4"></i> Transparent Pricing</span>
+                <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="text-green-400 w-4 h-4"></i> No Vendor Lock-in</span>
+                <span class="flex items-center gap-2"><i data-lucide="check-circle-2" class="text-green-400 w-4 h-4"></i> Open Data Export</span>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-white/5 py-8 text-center text-[#9ca3c0] text-xs">
+        <p>&copy; 2026 NOPE! Edge Security. All rights reserved.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. On Page Load: Check if we remembered them!
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedEmail = localStorage.getItem('nope_email');
+            const savedPassword = localStorage.getItem('nope_password');
+            const rememberCheckbox = document.getElementById('remember-checkbox');
+
+            if (savedEmail && savedPassword) {
+                // Populate the inputs
+                document.getElementById('email-input').value = savedEmail;
+                document.getElementById('password-input').value = savedPassword;
+                // Visually check the custom box
+                rememberCheckbox.checked = true; 
+            }
+        });
+
+        // 2. On Submit: Validate and Save/Clear Credentials
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            const emailInput = document.getElementById('email-input');
+            const passwordInput = document.getElementById('password-input');
+            const errorMsg = document.getElementById('email-error');
+            const rememberCheckbox = document.getElementById('remember-checkbox');
+            
+            // Standard Regex to check if it looks like an email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(emailInput.value)) {
+                e.preventDefault(); // Stop form submission completely
+                
+                // Show our custom red error UI
+                errorMsg.classList.remove('hidden');
+                emailInput.classList.add('border-red-400', 'focus:ring-red-400');
+                emailInput.classList.remove('focus:ring-[#b794f6]', 'border-white/10');
+            } else {
+                // If email is valid, handle the "Remember Me" logic!
+                if (rememberCheckbox.checked) {
+                    // Save to browser memory
+                    localStorage.setItem('nope_email', emailInput.value);
+                    localStorage.setItem('nope_password', passwordInput.value);
+                } else {
+                    // Wipe from browser memory if they unchecked it
+                    localStorage.removeItem('nope_email');
+                    localStorage.removeItem('nope_password');
+                }
+                
+                // Hide error text so form can cleanly POST to Python
+                errorMsg.classList.add('hidden');
+                emailInput.classList.remove('border-red-400', 'focus:ring-red-400');
+                emailInput.classList.add('border-white/10', 'focus:ring-[#b794f6]');
+            }
+        });
+    </script>
 </body>
 
 </html>

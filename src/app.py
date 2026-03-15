@@ -165,7 +165,17 @@ def toggle_waf():
 def home(): return render_template('index.html')
 
 @app.route('/subscribe', methods=['POST'])
-def subscribe(): return redirect(url_for('dashboard'))
+def subscribe(): 
+    # Grab the email they typed into the login box
+    login_email = request.form.get('email')
+    
+    # If they typed one, save it to their permanent profile!
+    if login_email:
+        profile_data = load_profile()
+        profile_data['email'] = login_email
+        save_profile(profile_data)
+        
+    return redirect(url_for('dashboard'))
 
 @app.route('/add-system-log', methods=['POST'])
 def add_system_log():
@@ -286,6 +296,21 @@ def ask_ai():
         return jsonify({"response": response.text})
     except:
         return jsonify({"response": "Analysis Complete: Threat dropped by WAF heuristics."})
+
+# ==========================================
+# 🎯 DUMMY TARGET SITE FOR TESTING
+# ==========================================
+@app.route('/target', methods=['GET', 'POST'])
+def target_site():
+    # If the firewall is OFF, and they send an attack, they will see this hacked message!
+    if request.method == 'POST':
+        username = request.form.get('username', '')
+        if "<script>" in username or "OR 1=1" in username.upper():
+            return "<h1>💀 YOU HAVE BEEN HACKED! (Firewall was bypassed)</h1><p>Malicious payload executed successfully.</p>"
+        return "<h1>✅ Login Attempted safely.</h1>"
+        
+    # If it's a normal visit, just show the fake login page
+    return render_template('dummy.html')
 
 if __name__ == '__main__':
     # 🛑 TURN OFF DEBUG MODE so the server stops wiping its memory when you save a file!

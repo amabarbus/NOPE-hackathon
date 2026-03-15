@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOPE! Enterprise | User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .glass-panel {
+            background: rgba(20, 24, 34, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #b794f6;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .label-text {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #9ca3c0;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* 🆕 --- THE THEMED SCROLLBAR FIX --- */
+        /* Target WebKit browsers (Chrome, Edge, Safari) */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            /* Width of the entire scrollbar */
+        }
+
+        /* Target the track (the area the thumb moves on) */
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.4);
+            /* Match your input-field bg */
+            border-radius: 1.25rem;
+            /* Match glass-panel edges */
+        }
+
+        /* Target the thumb (the part you click and drag) */
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #b794f6;
+            /* Match your purple accent */
+            border-radius: 1.25rem;
+        }
+
+        /* Style the thumb on hover for better UX */
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #6b8cff;
+            /* Match your blue accent on hover */
+        }
+
+        /* ------------------------------------- */
+    </style>
+</head>
+
+<body class="bg-[#0B0E14] text-white min-h-screen relative overflow-x-hidden flex flex-col items-center pb-20">
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div
+            class="absolute top-0 right-1/4 w-[400px] h-[400px] bg-[#b794f6] rounded-full blur-[150px] opacity-10 animate-pulse">
+        </div>
+        <div class="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-[#6b8cff] rounded-full blur-[150px] opacity-10 animate-pulse"
+            style="animation-delay: 1.5s"></div>
+    </div>
+
+    <form method="POST" action="/profile" class="max-w-5xl w-full p-8 relative z-10 mt-6">
+
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-gradient tracking-tight">Account Settings</h1>
+            <div class="flex gap-4">
+                <a href="/dashboard"
+                    class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[#e2e8f0] hover:bg-white/10 transition">
+                    Cancel
+                </a>
+                <button type="submit"
+                    class="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-[#6b8cff] to-[#b794f6] rounded-lg text-sm font-bold text-white shadow-lg shadow-[#b794f6]/20 hover:scale-105 transition-transform">
+                    <i data-lucide="save" class="w-4 h-4"></i> Save Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <div class="space-y-6">
+                <div class="glass-panel p-6 flex flex-col items-center text-center">
+                    <div
+                        class="w-24 h-24 rounded-full bg-gradient-to-br from-[#6b8cff] to-[#b794f6] p-1 mb-4 shadow-lg shadow-[#b794f6]/20">
+                        <div class="w-full h-full bg-[#0B0E14] rounded-full flex items-center justify-center">
+                            <i data-lucide="user" class="w-10 h-10 text-[#e8e9f3]"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-xl font-bold mb-1">{{ p.full_name }}</h2>
+                    <p class="text-[#9ca3c0] text-sm mb-4">@{{ p.username }}</p>
+                    <span
+                        class="px-3 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-lg text-xs font-bold tracking-wide w-full">ACCOUNT
+                        VERIFIED</span>
+                </div>
+
+                <div class="glass-panel p-6 border-t-4 border-t-[#6b8cff]">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="credit-card"
+                            class="w-5 h-5 text-[#6b8cff]"></i> Billing & Plan</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between"><span class="text-[#9ca3c0]">Current Plan</span><span
+                                class="font-bold text-[#b794f6]">Enterprise Pro</span></div>
+                        <div class="flex justify-between"><span class="text-[#9ca3c0]">Status</span><span
+                                class="text-green-400 font-medium">Active</span></div>
+                        <div class="flex justify-between"><span class="text-[#9ca3c0]">Next Billing</span><span>April
+                                14, 2026</span></div>
+                        <div class="flex justify-between"><span class="text-[#9ca3c0]">Payment</span><span>Visa
+                                **4242</span></div>
+
+                        <hr class="border-white/10 my-3">
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-[#9ca3c0] text-xs">Auto-Renew Subscription</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="auto_renew" class="sr-only peer" {% if p.auto_renew=='on'
+                                    %}checked{% endif %}>
+                                <div
+                                    class="w-9 h-5 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#b794f6]">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <a href="/manage"
+                        class="mt-4 block w-full text-center py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-xs font-medium transition">Manage
+                        Subscription</a>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 space-y-6">
+
+                <div class="glass-panel p-6 relative z-50">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="contact"
+                            class="w-5 h-5 text-[#b794f6]"></i> Basic Profile</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="label-text">Full Name</label>
+                            <input type="text" name="full_name" value="{{ p.full_name }}" class="input-field" required>
+                        </div>
+                        <div>
+                            <label class="label-text">Username</label>
+                            <input type="text" name="username" value="{{ p.username }}" class="input-field" required>
+                        </div>
+                        <div>
+                            <label class="label-text">Phone Number</label>
+                            <input type="text" name="phone" value="{{ p.phone }}" class="input-field">
+                        </div>
+                        <div>
+                            <label class="label-text">Country / Location</label>
+                            <input type="text" name="country" value="{{ p.country }}" class="input-field">
+                        </div>
+                    </div>
+                    <div class="mb-4 relative">
+                        <label class="label-text">Time Zone</label>
+
+                        <input type="hidden" name="timezone" id="timezone-input" value="{{ p.timezone }}">
+
+                        <button type="button" onclick="toggleTimezone()" id="timezone-btn"
+                            class="input-field flex justify-between items-center w-full text-left cursor-pointer hover:border-[#b794f6] transition relative z-20">
+                            <span id="timezone-display">{{ p.timezone }}</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-[#9ca3c0]"></i>
+                        </button>
+
+                        <div id="timezone-dropdown"
+                            class="hidden absolute z-[1000] w-full mt-2 glass-panel bg-[#0B0E14]/95 border border-[#b794f6]/30 rounded-xl shadow-2xl overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
+                            <ul class="py-2 text-sm text-[#e2e8f0]">
+                                <li><button type="button" onclick="selectTimezone('UTC-8 (PST)')"
+                                        class="w-full text-left px-4 py-2 hover:bg-[#b794f6]/20 hover:text-[#b794f6] transition">UTC-8
+                                        (PST)</button></li>
+                                <li><button type="button" onclick="selectTimezone('UTC-5 (EST)')"
+                                        class="w-full text-left px-4 py-2 hover:bg-[#b794f6]/20 hover:text-[#b794f6] transition">UTC-5
+                                        (EST)</button></li>
+                                <li><button type="button" onclick="selectTimezone('UTC+0 (GMT)')"
+                                        class="w-full text-left px-4 py-2 hover:bg-[#b794f6]/20 hover:text-[#b794f6] transition">UTC+0
+                                        (GMT)</button></li>
+                                <li><button type="button" onclick="selectTimezone('UTC+2 (EET)')"
+                                        class="w-full text-left px-4 py-2 hover:bg-[#b794f6]/20 hover:text-[#b794f6] transition">UTC+2
+                                        (EET)</button></li>
+                                <li><button type="button" onclick="selectTimezone('UTC+9 (JST)')"
+                                        class="w-full text-left px-4 py-2 hover:bg-[#b794f6]/20 hover:text-[#b794f6] transition">UTC+9
+                                        (JST)</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="label-text">Bio / Short Description</label>
+                        <textarea name="bio" rows="2" class="input-field resize-none">{{ p.bio }}</textarea>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="globe"
+                                class="w-5 h-5 text-[#94d7f6]"></i> Protected Website Info</h3>
+                        <span
+                            class="px-2 py-1 bg-[#94d7f6]/10 text-[#94d7f6] text-[10px] rounded border border-[#94d7f6]/20 font-bold tracking-widest"><i
+                                data-lucide="check-circle" class="w-3 h-3 inline"></i> DOMAIN VERIFIED</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="col-span-2">
+                            <label class="label-text">Website URL</label>
+                            <input type="url" name="website_url" value="{{ p.website_url }}"
+                                class="input-field font-mono text-[#94d7f6]" required>
+                        </div>
+                        <div>
+                            <label class="label-text">Website Name</label>
+                            <input type="text" name="website_name" value="{{ p.website_name }}" class="input-field">
+                        </div>
+                        <div>
+                            <label class="label-text">Website Category</label>
+                            <input type="text" name="website_category" value="{{ p.website_category }}"
+                                class="input-field" placeholder="e.g., E-Commerce, Blog">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="label-text">Website Description</label>
+                            <input type="text" name="website_desc" value="{{ p.website_desc }}" class="input-field">
+                        </div>
+                        <div class="col-span-2">
+                            <label class="label-text">X / Twitter Link</label>
+                            <input type="text" name="social_twitter" value="{{ p.social_twitter }}" class="input-field">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 border-l-4 border-l-red-500/50">
+                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="lock"
+                            class="w-5 h-5 text-red-400"></i> Login & Security</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label class="label-text">Login Email</label>
+                            <input type="email" name="email" value="{{ p.email }}"
+                                class="input-field opacity-70 cursor-not-allowed" readonly>
+                        </div>
+                        <div>
+                            <label class="label-text">Recovery Email</label>
+                            <input type="email" placeholder="Add recovery email..." class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-black/30 rounded-xl border border-white/5">
+                            <div>
+                                <h4 class="font-medium text-sm">Two-Factor Authentication (2FA)</h4>
+                                <p class="text-[#9ca3c0] text-xs mt-1">Require an extra security code on login.</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="two_factor" class="sr-only peer" {% if p.two_factor=='on'
+                                    %}checked{% endif %}>
+                                <div
+                                    class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500">
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-between items-center p-4 bg-black/30 rounded-xl border border-white/5">
+                            <div>
+                                <h4 class="font-medium text-sm text-red-400">Change Password</h4>
+                                <p class="text-[#9ca3c0] text-xs mt-1">Last changed 45 days ago.</p>
+                            </div>
+                            <button type="button"
+                                class="px-4 py-2 border border-red-500/30 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/10 transition">Update
+                                Password</button>
+                        </div>
+
+                        <div class="mt-4 text-xs text-[#9ca3c0]">
+                            <strong>Last Login:</strong> Today at 10:36 PM from Mac OS (Chrome) • IP: 192.168.1.1
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // --- CUSTOM DROPDOWN LOGIC ---
+        function toggleTimezone() {
+            document.getElementById('timezone-dropdown').classList.toggle('hidden');
+        }
+
+        function selectTimezone(value) {
+            // Update the hidden input for Python
+            document.getElementById('timezone-input').value = value;
+            // Update the text the user sees
+            document.getElementById('timezone-display').innerText = value;
+            // Close the menu
+            document.getElementById('timezone-dropdown').classList.add('hidden');
+        }
+
+        // Close the dropdown if the user clicks somewhere else on the page
+        document.addEventListener('click', function (event) {
+            const btn = document.getElementById('timezone-btn');
+            const dropdown = document.getElementById('timezone-dropdown');
+            if (btn && dropdown && !btn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

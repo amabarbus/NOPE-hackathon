@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOPE! Pro | Manage Subscription</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; }
+        .glass-panel { background: rgba(20, 24, 34, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.25rem; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); }
+        .text-gradient { background: linear-gradient(to right, #e8e9f3, #b794f6, #6b8cff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .active-ring { box-shadow: 0 0 0 2px #b794f6, 0 0 20px rgba(183, 148, 246, 0.2); }
+        
+        /* Custom Scrollbar for Invoice Table */
+        ::-webkit-scrollbar { height: 6px; width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+    </style>
+</head>
+
+<body class="bg-[#0B0E14] text-white min-h-screen relative overflow-x-hidden">
+
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#b794f6] rounded-full blur-[150px] opacity-10 animate-pulse"></div>
+        <div class="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-[#6b8cff] rounded-full blur-[150px] opacity-10 animate-pulse" style="animation-delay: 2s"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-8 relative z-10 flex flex-col min-h-screen">
+
+        <div class="mb-10 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="p-2 rounded-2xl bg-gradient-to-br from-[#6b8cff] to-[#b794f6] shadow-lg shadow-[#b794f6]/20">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" class="w-8 h-8 object-contain">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gradient tracking-tight">Billing & Usage</h1>
+                </div>
+            </div>
+            
+            <a href="/dashboard" class="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-[#e2e8f0] hover:bg-white/10 transition">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="glass-panel p-8 mb-8 flex flex-col md:flex-row justify-between items-center gap-6 active-ring w-full">
+            <div class="flex items-center gap-6">
+                <div class="p-4 bg-[#b794f6]/10 rounded-2xl border border-[#b794f6]/20">
+                    <i data-lucide="zap" class="w-10 h-10 text-[#b794f6]"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3 mb-1">
+                        <h2 class="text-2xl font-bold">Enterprise Cloud</h2>
+                        <span class="px-2.5 py-1 bg-green-500/10 text-green-400 border border-green-500/20 rounded-md text-xs font-bold tracking-wide">ACTIVE</span>
+                    </div>
+                    <p class="text-[#9ca3c0] text-sm">Billed €449.00 monthly. Next charge on April 1, 2026.</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-end gap-3 w-full md:w-auto">
+                <div class="flex items-center gap-2 text-sm text-[#9ca3c0] bg-black/40 px-4 py-2 rounded-lg border border-white/5 w-full md:w-auto justify-center">
+                    <i data-lucide="credit-card" class="w-4 h-4 text-[#e8e9f3]"></i>
+                    <span>Visa ending in <strong>4242</strong></span>
+                </div>
+                <button class="text-sm text-red-400 hover:text-red-300 transition underline underline-offset-4">Cancel Subscription</button>
+            </div>
+        </div>
+
+        <h3 class="text-xl font-bold mb-6 text-center lg:text-left">Change Subscription</h3>
+
+        <div class="glass-panel p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-6 bg-gradient-to-r from-green-500/10 to-emerald-500/5 border-green-500/20 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full blur-[100px] opacity-10 pointer-events-none"></div>
+            
+            <div class="flex items-center gap-5 relative z-10">
+                <div class="p-3 bg-green-500/20 rounded-xl border border-green-500/30">
+                    <i data-lucide="gift" class="w-6 h-6 text-green-400"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white flex items-center gap-3 mb-1">
+                        Switch to Annual Billing 
+                        <span class="px-2 py-0.5 bg-green-500 text-white text-[10px] font-bold rounded uppercase tracking-wider shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse">Save 20%</span>
+                    </h3>
+                    <p class="text-sm text-[#9ca3c0]">Commit to a full year and get over 2 months completely free on any plan.</p>
+                </div>
+            </div>
+            <button class="px-6 py-2.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl text-sm transition shadow-[0_0_15px_rgba(34,197,94,0.3)] whitespace-nowrap relative z-10">
+                Upgrade to Annual
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 flex-1 mb-12">
+
+            <div class="glass-panel p-6 flex flex-col relative opacity-70 hover:opacity-100 transition duration-300">
+                <h3 class="text-lg font-bold mb-2">Basic WAF</h3>
+                <div class="text-3xl font-bold mb-4">€19<span class="text-[#9ca3c0] text-base font-normal">/mo</span></div>
+                <ul class="space-y-3 mb-8 text-sm text-[#9ca3c0] flex-1">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>Standard Rule Set</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>7-Day Log Retention</span></li>
+                    <li class="flex items-start gap-2 opacity-50"><i data-lucide="x" class="w-4 h-4 mt-0.5 shrink-0"></i> <span>No AI Analysis</span></li>
+                </ul>
+                <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white mt-auto">Downgrade</button>
+            </div>
+
+            <div class="glass-panel p-6 flex flex-col relative opacity-70 hover:opacity-100 transition duration-300">
+                <h3 class="text-lg font-bold mb-2">Pro Shield</h3>
+                <div class="text-3xl font-bold mb-4">€49<span class="text-[#9ca3c0] text-base font-normal">/mo</span></div>
+                <ul class="space-y-3 mb-8 text-sm text-[#9ca3c0] flex-1">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>Advanced XSS/SQLi Block</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>30-Day Log Retention</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>Basic AI Summaries</span></li>
+                </ul>
+                <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white mt-auto">Downgrade</button>
+            </div>
+
+            <div class="glass-panel p-6 flex flex-col relative opacity-70 hover:opacity-100 transition duration-300">
+                <h3 class="text-lg font-bold mb-2">Elite Guard</h3>
+                <div class="text-3xl font-bold mb-4">€149<span class="text-[#9ca3c0] text-base font-normal">/mo</span></div>
+                <ul class="space-y-3 mb-8 text-sm text-[#9ca3c0] flex-1">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>1-Year Log Retention</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>Complex AI Summaries</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="mail" class="w-4 h-4 text-[#6b8cff] mt-0.5 shrink-0"></i> <span>Real-time Alerts via Mail</span></li>
+                </ul>
+                <button class="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm transition font-medium text-white mt-auto">Downgrade</button>
+            </div>
+
+            <div class="glass-panel p-6 flex flex-col relative border-[#b794f6]/30 bg-gradient-to-b from-[#b794f6]/10 to-transparent z-10 shadow-2xl shadow-[#b794f6]/10">
+                <div class="absolute top-0 right-0 bg-[#b794f6] text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg rounded-tr-[1.2rem] uppercase tracking-wide">Current Plan</div>
+                <h3 class="text-lg font-bold mb-2 text-white">Enterprise Cloud</h3>
+                <div class="text-3xl font-bold mb-4 text-[#b794f6]">€449<span class="text-[#9ca3c0] text-base font-normal">/mo</span></div>
+                
+                <ul class="space-y-3 mb-8 text-sm text-[#e2e8f0] flex-1">
+                    <li class="flex items-start gap-2"><i data-lucide="globe" class="w-4 h-4 text-[#b794f6] mt-0.5 shrink-0"></i> <span>Global Edge DNS Routing</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="sliders" class="w-4 h-4 text-[#b794f6] mt-0.5 shrink-0"></i> <span>Custom Firewall Rules</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="mail-warning" class="w-4 h-4 text-[#b794f6] mt-0.5 shrink-0"></i> <span>Real-time Alerts via Mail</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="file-check" class="w-4 h-4 text-[#b794f6] mt-0.5 shrink-0"></i> <span>ISO Compliance Reports</span></li>
+                    <li class="flex items-start gap-2 font-bold text-[#b794f6]"><i data-lucide="sparkles" class="w-4 h-4 mt-0.5 shrink-0"></i> <span>Unlimited Gemini AI Intel</span></li>
+
+                </ul>
+                
+                <div class="mt-auto">
+                    <p class="text-xs text-center text-[#9ca3c0] mb-3 border-t border-white/10 pt-3">Includes 24/7 Priority Support</p>
+                    <button class="w-full py-2.5 bg-[#b794f6]/20 border border-[#b794f6]/40 rounded-xl text-sm transition font-bold text-[#b794f6] cursor-default pointer-events-none shadow-inner shadow-[#b794f6]/10">Active Plan</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="glass-panel p-8 mb-8 w-full">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="p-2 bg-[#6b8cff]/10 rounded-lg border border-[#6b8cff]/20">
+                    <i data-lucide="trending-up" class="w-5 h-5 text-[#6b8cff]"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold">Current Usage</h3>
+                    <p class="text-[#9ca3c0] text-sm">This billing period</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div>
+                    <p class="text-[#9ca3c0] text-sm mb-1">Requests Protected</p>
+                    <div class="text-3xl font-bold mb-3 text-[#e2e8f0]">{{ total_requests }}</div>
+                    <div class="w-full bg-white/5 rounded-full h-1.5 mb-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-[#6b8cff] to-[#b794f6] h-1.5 rounded-full shadow-[0_0_10px_rgba(107,140,255,0.5)]" style="width: 85%"></div>
+                    </div>
+                    <p class="text-[#9ca3c0] text-xs">Unlimited plan</p>
+                </div>
+                
+                <div>
+                    <p class="text-[#9ca3c0] text-sm mb-1">Threats Blocked</p>
+                    <div class="text-3xl font-bold mb-3 text-[#e2e8f0]">{{ total_blocked }}</div>
+                    <div class="w-full bg-white/5 rounded-full h-1.5 mb-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-teal-400 to-cyan-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(45,212,191,0.5)] style="width: {{ threat_bar }};"></div>
+                    </div>
+                    <p class="text-teal-400 text-xs font-medium">+12% from last month</p>
+                </div>
+                
+                <div>
+                    <p class="text-[#9ca3c0] text-sm mb-1">Uptime</p>
+                    <div class="text-3xl font-bold mb-3 text-[#e2e8f0]">{{ uptime }}</div>
+                    <div class="w-full bg-white/5 rounded-full h-1.5 mb-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-pink-500 to-rose-400 h-1.5 rounded-full shadow-[0_0_10px_rgba(244,114,182,0.5)]" style="width: 99.9%"></div>
+                    </div>
+                    <p class="text-[#9ca3c0] text-xs">Excellent reliability</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel p-8 w-full mb-10">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-[#b794f6]/10 rounded-lg border border-[#b794f6]/20">
+                    <i data-lucide="file-text" class="w-5 h-5 text-[#b794f6]"></i>
+                </div>
+                <h3 class="text-xl font-bold">Invoice History</h3>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-[#9ca3c0]">
+                    <thead class="text-xs uppercase bg-black/40 text-[#e2e8f0] border-b border-white/10">
+                        <tr>
+                            <th class="px-6 py-4 rounded-tl-lg font-semibold tracking-wider">Invoice ID</th>
+                            <th class="px-6 py-4 font-semibold tracking-wider">Period</th>
+                            <th class="px-6 py-4 font-semibold tracking-wider">Date</th>
+                            <th class="px-6 py-4 font-semibold tracking-wider">Amount</th>
+                            <th class="px-6 py-4 font-semibold tracking-wider">Status</th>
+                            <th class="px-6 py-4 rounded-tr-lg font-semibold tracking-wider text-right">Download</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition group">
+                            <td class="px-6 py-4 font-medium text-[#6b8cff]">INV-2026-000</td>
+                            <td class="px-6 py-4">March 2026</td>
+                            <td class="px-6 py-4">Mar 1, 2026</td>
+                            <td class="px-6 py-4 text-white font-medium">€449.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 border border-yellow-500/30 text-yellow-500 bg-yellow-500/10 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 w-fit">
+                                    <i data-lucide="calendar-clock" class="w-3 h-3"></i> PENDING
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-[#6b8cff]/10 rounded-lg text-[#6b8cff] transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition group">
+                            <td class="px-6 py-4 font-medium text-[#6b8cff]">INV-2026-001</td>
+                            <td class="px-6 py-4">February 2026</td>
+                            <td class="px-6 py-4">Feb 1, 2026</td>
+                            <td class="px-6 py-4 text-white font-medium">€449.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 border border-green-500/30 text-green-400 bg-green-500/10 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 w-fit">
+                                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> PAID
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-[#6b8cff]/10 rounded-lg text-[#6b8cff] transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-white/5 hover:bg-white/5 transition group">
+                            <td class="px-6 py-4 font-medium text-[#6b8cff]">INV-2025-012</td>
+                            <td class="px-6 py-4">January 2026</td>
+                            <td class="px-6 py-4">Jan 1, 2026</td>
+                            <td class="px-6 py-4 text-white font-medium">€449.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 border border-green-500/30 text-green-400 bg-green-500/10 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 w-fit">
+                                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> PAID
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-[#6b8cff]/10 rounded-lg text-[#6b8cff] transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-white/5 transition group">
+                            <td class="px-6 py-4 font-medium text-[#6b8cff]">INV-2025-011</td>
+                            <td class="px-6 py-4">December 2025</td>
+                            <td class="px-6 py-4">Dec 1, 2025</td>
+                            <td class="px-6 py-4 text-white font-medium">€449.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2.5 py-1 border border-green-500/30 text-green-400 bg-green-500/10 rounded-md text-[10px] font-bold tracking-wide flex items-center gap-1.5 w-fit">
+                                    <i data-lucide="check-circle-2" class="w-3 h-3"></i> PAID
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-[#6b8cff]/10 rounded-lg text-[#6b8cff] transition">
+                                    <i data-lucide="download" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

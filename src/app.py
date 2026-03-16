@@ -23,7 +23,7 @@ app = Flask(
 )  # Explicitly tell Flask the URL prefix
 
 # 🔑 IMPORTANT: Replace with your actual Gemini API Key!
-genai.configure(api_key="AIzaSyCnVEwTcJUuShYYUyPcp79k70YBJDtSn9Q")
+genai.configure(api_key=API_KEY)
 
 # ==========================================
 # 💾 USER PROFILE "DATABASE" (JSON)
